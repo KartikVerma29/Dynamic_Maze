@@ -1,0 +1,24 @@
+maze change trigger
+   agreed
+   could use steps as primary trigger
+   varinace
+   in gaunlet mode, time-based
+      camping can be punished by opening wall around player or spawn patrol, etc
+
+difficulty scaling
+   drive scaling 
+      in gaunlet, based time survived, trying game over
+      other modes, would based to solved stages
+
+player attack
+   simple collision from behind
+   *blockers can be attack from either side, when moving only
+
+concentric ring maze
+   both rotate & wall shifts
+
+dark & dynamic can be multipe levels
+while gaunlet can be endless run
+
+main menu UI
+   modes, setting highscore, etc important stuff

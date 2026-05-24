@@ -1,0 +1,9 @@
+1. Player class
+   it own Position, Direction
+since Lives only in Gaunlet, so separate class
+Score - it should be separate class, as it will caluclate differently in each mode
+
+2. Enemy : yeah, your way is correct
+3. Enemy AI : strategy pattern
+4. Enemey defect detection - CollisiionDetector class
+5. yes

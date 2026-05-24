@@ -1,0 +1,24 @@
+gaunlet win condition
+   just survive
+
+stage structure
+   for now, just 4-5 level each
+   yes, maze size grow per level as well as difficulty
+
+for now, let do grid, & ring individually
+   other types (mixed, asymmetric) afterways
+
+setting menu, considering bacis features
+
+highscore
+   aiming for online leaderboard
+
+player speed
+   fixed in dark & dynamic as more speed isn't need
+   gaunlet, as speed should incease with time & difficulty
+
+enemy count
+   depending on difficulty
+   zero in dark mode
+   possible zero in dynamic
+
