@@ -1,18 +1,46 @@
 #pragma once
 #include "Position.h"
+enum class DirectionType {UP, DOWN, LEFT, RIGHT};
 
 class Direction{
-public:
-   enum class DirectionType {UP, DOWN, LEFT, RIGHT};
-private:
+   private:
    DirectionType type;
 public:
-   
-   DirectionType getType() const;
-   Direction opposite() const;
-   Position toVector() const;
-   Direction rotate90() const;
+   Direction(DirectionType type){
+      this->type = type;
+   }
+
+   DirectionType getType() const{
+      return this->type;
+   }
+   Direction opposite() const{
+      switch(this->type) {
+         case DirectionType::UP: return Direction(DirectionType::DOWN);
+         case DirectionType::DOWN: return Direction(DirectionType::UP);
+         case DirectionType::LEFT: return Direction(DirectionType::RIGHT);
+         case DirectionType::RIGHT: return Direction(DirectionType::LEFT);
+      }
+   }
+
+   Position toVector() const{
+      switch(this->type) {
+         case DirectionType::UP: return Position(0,-1);
+         case DirectionType::DOWN: return Position(0,1);
+         case DirectionType::LEFT: return Position(-1,0);
+         case DirectionType::RIGHT: return Position(1,0);
+      }
+   }
+   Direction rotate90() const{
+     switch(type) {
+        case DirectionType::UP: return Direction(DirectionType::RIGHT);
+        case DirectionType::RIGHT: return Direction(DirectionType::DOWN);
+        case DirectionType::DOWN: return Direction(DirectionType::LEFT);
+        case DirectionType::LEFT: return Direction(DirectionType::UP);
+     } 
+   }
    Direction rotateTo(int angle) const;
-   bool operator==(const Direction& other) const;
+   bool operator==(const Direction& other) const{
+      return type == other.type;
+   }
 
 };

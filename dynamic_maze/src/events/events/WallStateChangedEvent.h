@@ -1,7 +1,8 @@
 #pragma once
 
-class WallStatedChangedEvent{
+class WallStateChangedEvent{
 public:
-   int row1,co1;
+   int row1,col1;
    int row2,col2;
+   bool isOpen;
 };
