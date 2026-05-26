@@ -3,6 +3,6 @@
 
 class DFSSolvabilityChecker: public ISolvabilityChecker{
 public:
-   bool isSolvable(Maze &maze, Position &start, Position &exit) override;
-   std::vector<Position> getPath(Maze &maze, Position &start, Position &exit) override;
+   bool isSolvable(Maze &maze,const Position &start,const Position &exit) override;
+   std::vector<Position> getPath(Maze &maze,const Position &start,const Position &exit) override;
 };

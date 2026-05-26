@@ -17,8 +17,9 @@ private:
    void rollbackWall(Wall* wall);
 public:
 
-   GridMazeMutator(ISolvabilityChecker& checker, EventManager& eventManager, int batchSize = 3);
+   GridMazeMutator(ISolvabilityChecker& checker, EventManager& eventManager, int batchSize = 3): checker(checker), eventManager(eventManager), batchSize(batchSize) {};
 
-   void mutate(Maze &maze, Position &playerPos, Position &exitPos) override;
+   void mutate(Maze &maze,const Position &playerPos,const Position &exitPos) override;
    virtual ~GridMazeMutator() = default;
+   
 };
