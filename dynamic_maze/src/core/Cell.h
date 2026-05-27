@@ -19,10 +19,11 @@ private:
    bool isRelevant(int r1, int c1, int r2, int c2, int& otherRow, int& otherCol) const;
 public:
 
+   Cell():row(0), col(0), visited(false) {}
    Cell(int row, int col);
 
-   Wall* getWall(DirectionType& type);
-   void setWall(DirectionType& type, Wall* wall);
+   Wall* getWall(const DirectionType& type);
+   void setWall(const DirectionType& type, Wall* wall);
    bool hasOpenWall(DirectionType& type);
 
    int getRow() const;

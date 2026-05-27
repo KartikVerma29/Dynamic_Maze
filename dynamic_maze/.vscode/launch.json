@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "Debug dynamic_maze",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/dynamic_maze",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopOnEntry": false
+        }
+    ]
+}

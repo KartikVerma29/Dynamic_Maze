@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <stack>
 #include "../Maze.h"
+#include <iostream>
 /*
 1. Choose the initial cell, mark it as visited and push it to the stack
 2. While the stack is not empty
@@ -33,17 +34,24 @@ std::vector<std::pair<int,int>> RecursiveBacktrackerGenerator::getUnvisit(Maze& 
 
 Wall* RecursiveBacktrackerGenerator::getWallbetween(Cell* cell, int row, int col, int nRow, int nCol) {
     DirectionType dir;
-    if (nRow < row) dir = DirectionType::UP;
-    else if (nRow > row) dir = DirectionType::DOWN;
+    if (nRow < row) dir =  DirectionType::UP;
+    else if (nRow > row) dir =  DirectionType::DOWN;
     else if (nCol < col) dir = DirectionType::LEFT;
     else dir = DirectionType::RIGHT;
-    return cell->getWall(dir);
+    return cell->getWall((const DirectionType) dir);
 }
 
 void RecursiveBacktrackerGenerator::generate(Maze& maze){
    int rows = maze.getRows(), cols = maze.getCols();
    int sRow = std::rand()%rows, sCol = std::rand()%cols;
-   maze.getCell(sRow, sCol)->setVisited(true);
+   
+   Cell* cell = maze.getCell(sRow, sCol);
+    if (!cell){
+        std::cerr << "Invalid starting cell coordinates: (" << sRow << ", " << sCol << ")\n";   
+        return;
+    }
+    cell->setVisited(true);
+  
 
    std::stack<std::pair<int,int>> st;
    st.push({sRow, sCol});

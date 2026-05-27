@@ -13,7 +13,7 @@
 
 void PrimsGenerator::addFWalls(Maze& maze, int row, int col, std::vector<Wall*>& fWalls){
    Cell* cell = maze.getCell(row,col);
-   for(auto dir: {DirectionType::UP, DirectionType::DOWN, DirectionType::LEFT, DirectionType::RIGHT}){
+   for(const auto dir: {DirectionType::UP, DirectionType::DOWN, DirectionType::LEFT, DirectionType::RIGHT}){
       Wall* wall = cell->getWall(dir);
       if(wall && !wall->getIsOpen()){
          fWalls.push_back(wall);

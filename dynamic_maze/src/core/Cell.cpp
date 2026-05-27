@@ -2,17 +2,15 @@
 #include "Direction.h"
 #include "Wall.h"
 
-Cell::Cell(int row, int col){
-   this->row = row;
-   this->col = col;
-   this->visited = false;
+Cell::Cell(int row, int col): row(row), col(col), visited(false) {}
+
+Wall* Cell::getWall(const DirectionType& type){
+   auto it=walls.find(type);
+   if(it==walls.end()) return nullptr;
+   return it->second;
 }
 
-Wall* Cell::getWall(DirectionType& type){
-   return walls.at(type);
-}
-
-void Cell::setWall(DirectionType& type, Wall* wall){
+void Cell::setWall(const DirectionType& type, Wall* wall){
    walls[type] = wall;
 }
 
@@ -56,7 +54,10 @@ void Cell::onEvent(const WallRemovedEvent& event){
 void Cell::onEvent(const WallStateChangedEvent& event){
   int oRow=0, oCol=0;
   if(isRelevant(event.row1, event.col1 , event.row2, event.col2, oRow, oCol)){
-     Wall* wall = walls.at(getDirection(oRow, oCol));
+     auto it=walls.find(getDirection(oRow, oCol));
+       if(it==walls.end()) return;
+     Wall* wall = it->second;
+     
      if(wall){
         if(event.isOpen) wall->open();
         else wall->close();

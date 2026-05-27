@@ -24,10 +24,10 @@ public:
 
    Position toVector() const{
       switch(this->type) {
-         case DirectionType::UP: return Position(0,-1);
-         case DirectionType::DOWN: return Position(0,1);
-         case DirectionType::LEFT: return Position(-1,0);
-         case DirectionType::RIGHT: return Position(1,0);
+         case DirectionType::UP: return Position(-1,0);
+         case DirectionType::DOWN: return Position(1,0);
+         case DirectionType::LEFT: return Position(0,-1);
+         case DirectionType::RIGHT: return Position(0,1);
       }
    }
    Direction rotate90() const{

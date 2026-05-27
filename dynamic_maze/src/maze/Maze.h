@@ -13,7 +13,7 @@ private:
    int rows, cols;
 
 public:
-   Maze(int rows, int cols) : rows(rows), cols(cols) {}
+   Maze(int rows, int cols);
 
    Cell* getCell(int row, int col);
    const Cell* getCell(int row, int col) const;
