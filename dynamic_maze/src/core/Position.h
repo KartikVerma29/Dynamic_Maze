@@ -5,6 +5,7 @@ class Position{
 private:
    float x,y;
 public:
+   Position():x(0),y(0){}
    Position(float x, float y): x(x), y(y){}
 
    float getX() const{ return this->x;}

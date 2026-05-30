@@ -6,9 +6,9 @@ class Direction{
    private:
    DirectionType type;
 public:
-   Direction(DirectionType type){
-      this->type = type;
-   }
+   Direction(): type(DirectionType::UP){}
+   Direction(DirectionType type):type(type){}
+
 
    DirectionType getType() const{
       return this->type;
