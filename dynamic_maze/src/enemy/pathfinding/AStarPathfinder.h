@@ -5,6 +5,8 @@
 class AStarPathfinder: public IPathfinder
 {
 public:
-   std::vector<Position> findPath(Maze &maze, Position &from, Position &to) const override;
+   std::vector<Position> findPath(Maze &maze, Position &from, Position &to) override;
+   
+   ~AStarPathfinder() = default;
 };
 

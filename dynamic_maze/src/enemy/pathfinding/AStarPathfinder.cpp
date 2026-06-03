@@ -22,7 +22,7 @@ static float heuristic(Cell* a, Cell* b){
    return posA.distanceTo(posB);
 }
 
-std::vector<Position> AStarPathfinder::findPath(Maze& maze, Position& from, Position& to)const{
+std::vector<Position> AStarPathfinder::findPath(Maze& maze, Position& from, Position& to){
    std::vector<Position> path;
    std::priority_queue<ANode, std::vector<ANode>, std::greater<ANode>> openSet;
    std::unordered_map<Cell*, Cell*> parent;

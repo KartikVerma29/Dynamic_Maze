@@ -9,14 +9,19 @@ class IEnemy:public IEventListener<WallStateChangedEvent>{
 protected:
    Position position;
    Direction direction;
+   std::vector<Position> cachedPath;
+   int pathIndex=0;
    bool isDefeated=false;
-public:
    
-
+   bool isWallOnPath(const WallStateChangedEvent& event) const;
+   
+   public:
+   IEnemy(Position position, Direction direction) : position(position), direction(direction){}
+   
    virtual void update(Maze& maze, float deltaTime) = 0;
    virtual bool isDefeatable(const Direction& direction) const = 0;
-   void onEvent(const WallStateChangedEvent &event) override;
-
+   virtual void onEvent(const WallStateChangedEvent &event) = 0;
+   
    Position getPosition() const{
       return position;
    };

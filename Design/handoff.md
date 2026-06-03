@@ -334,6 +334,8 @@ dynamic_maze/
 
 ---
 
+Make DirectionType vector to use directly in Multiple places. DRY///
+
 ## Ownership Rules (Memory)
 
 | Situation | Use |

@@ -23,5 +23,5 @@ public:
    void onEvent(const PlayerMovedEvent &event) override;
    
    Position getPosition() const{ return position; }
-
+   Direction getDirection() const{ return direction;}
 };
