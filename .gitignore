@@ -1,4 +1,6 @@
-/build
+build
 *.png
-/Design
-/home/zerotwo/Desktop/Code/Project/Project-2/Design
+Design
+html
+latex
+dynamic_maze/Doxyfile

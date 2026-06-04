@@ -11,7 +11,7 @@ public:
    Direction lastPlayerDirection;
    
 private:
-
+   EnemyType getType() const override{ return EnemyType::PATROL ;}
    void onEvent(const WallStateChangedEvent &event) override;
    void update(Maze &maze, float deltaTime) override;
    bool isDefeatable(const Direction &direction) const override;

@@ -5,6 +5,8 @@
 #include "../core/Direction.h"
 #include "../core/Position.h"
 
+enum class EnemyType{CHASER, PATROL, BLOCKER};
+
 class IEnemy:public IEventListener<WallStateChangedEvent>{
 protected:
    Position position;
@@ -21,7 +23,7 @@ protected:
    virtual void update(Maze& maze, float deltaTime) = 0;
    virtual bool isDefeatable(const Direction& direction) const = 0;
    virtual void onEvent(const WallStateChangedEvent &event) = 0;
-   
+   virtual EnemyType getType()const =0;
    Position getPosition() const{
       return position;
    };

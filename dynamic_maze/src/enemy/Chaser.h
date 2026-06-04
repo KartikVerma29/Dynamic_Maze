@@ -15,6 +15,8 @@ public:
    void onEvent(const WallStateChangedEvent &event) override;
    void onEvent(const PlayerMovedEvent &event) override;
 
+   EnemyType getType() const override{ return EnemyType::CHASER ;}
+
    bool isDefeatable(const Direction &direction) const override{
       return false;
    };
