@@ -1,6 +1,7 @@
 build
-*.png
 Design
 html
 latex
 dynamic_maze/Doxyfile
+dynamic_maze/build
+dynamic_maze/.vscode
