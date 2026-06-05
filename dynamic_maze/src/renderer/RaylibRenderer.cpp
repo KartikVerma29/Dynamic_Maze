@@ -1,6 +1,5 @@
 #include "RaylibRenderer.h"
 #include "IRenderer.h"
-#include <raylib.h>
 
 
 RaylibRenderer::RaylibRenderer(int width, int height, const char* title):
@@ -105,6 +104,4 @@ void RaylibRenderer::drawFog(Position& position, float radius){
    );
 }
 
-void RaylibRenderer::drawCell(UIManager& uiManager){
-   uiManager.draw();
-}
+

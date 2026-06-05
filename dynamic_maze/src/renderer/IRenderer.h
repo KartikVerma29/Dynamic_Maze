@@ -16,7 +16,6 @@ public:
    virtual void drawEnemy(IEnemy& ienemy)=0;
    virtual void drawMaze(Maze& maze)=0;
    virtual void drawFog(Position& position, float radius)=0;
-   virtual void drawUI(UIManager& uiManager)=0;
 
    virtual ~IRenderer()=default;
 };

@@ -57,6 +57,7 @@ add_executable(dynamic_maze ${SOURCES})
 # ─────────────────────────────────────────
 target_include_directories(dynamic_maze PRIVATE
     ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE)SOURCE_DIR}/include
 )
 
 # ─────────────────────────────────────────
