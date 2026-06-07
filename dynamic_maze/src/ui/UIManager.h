@@ -10,7 +10,7 @@ private:
    int difficulty = 0;
 public:
    UIManager(EventManager& eventManager);
-
+   
    void drawHUD(int score);
    void drawLives(const Lives& lives);
    void drawTime(float deltaTime);
@@ -18,4 +18,8 @@ public:
    void drawSettings();
    void drawGameOver(int score);
    void drawLevelComplete(int score);
+
+   int getSelectedIndex() const { return selectedIndex;}
+   void resetSelectedIndex() { selectedIndex = -1;}
+
 };

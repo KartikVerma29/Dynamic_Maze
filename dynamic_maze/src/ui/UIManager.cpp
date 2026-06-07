@@ -26,10 +26,10 @@ void UIManager::drawMainMenu(){
    float centerX = (float)GetScreenWidth()/2 - w/2;
    
 
-    GuiButton({centerX, (float)GetScreenHeight()/4   ,w,h}, "Dynamic Maze");
-    GuiButton({centerX, (float)GetScreenHeight()/4+8 ,w,h}, "Dark Maze");
-    GuiButton({centerX, (float)GetScreenHeight()/4+16,w,h}, "Gauntlet");
-    GuiButton({centerX, (float)GetScreenHeight()/4+24,w,h}, "Settings");
+    if(GuiButton({centerX, (float)GetScreenHeight()/4   ,w,h}, "Dynamic Maze")) selectedIndex=1;
+    if(GuiButton({centerX, (float)GetScreenHeight()/4+48 ,w,h}, "Dark Maze")) selectedIndex=2;
+    if(GuiButton({centerX, (float)GetScreenHeight()/4+96,w,h}, "Gauntlet")) selectedIndex=3;
+    if(GuiButton({centerX, (float)GetScreenHeight()/4+144,w,h}, "Settings")) selectedIndex=4;
    
 }
 
@@ -40,7 +40,7 @@ void UIManager::drawGameOver(int score){
 
    DrawText("GAME OVER", sw/2-MeasureText("GAME OVER", 40)/2 , sh/3 , 40,RED);
 
-   std::string str = "Score"+std::to_string(score);
+   std::string str = "Score: "+std::to_string(score);
    const char* ch = str.c_str();
 
    DrawText(ch, sw/2 - MeasureText(ch, 24), sh/3+60, 24, WHITE);

@@ -1,6 +1,5 @@
 #pragma once
-
-class IRenderer;
+#include "../renderer/IRenderer.h"
 
 enum class AppStateType {SETTINGS, MAINMENU, DARK, DYNAMIC, GAUNTLET};
 

@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(Position& position, Direction& direction): position(position), direction(direction){}
+Player::Player(Position position, Direction direction): position(position), direction(direction){}
 
 void Player::onEvent(const PlayerHitEvent& event){
 

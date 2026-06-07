@@ -20,7 +20,6 @@ public:
    void drawFog(Position& position, float radius) override;
    void drawMaze(Maze &maze) override;
    void drawPlayer(Player &player) override;
-   void drawUI(UIManager &uiManager) override;
    void setMazeDimensions(int rows, int cols){
       mazeCols=cols; mazeRows=rows;
    }

@@ -12,10 +12,13 @@ private:
       if(ctx.pathLength==0) return 0;
       return ((float)ctx.optimalPathLenght/ctx.pathLength)*100;
    }
+   int calcTimePenalty(const ScoreContext& ctx){
+      return 1000/ctx.timeTaken;
+   }
    int score=0;
 public:
    int calculate(const ScoreContext &ctx) override{
-      score = calcPathScore(ctx) + calcMapCoverage(ctx)*(ctx.pathLength/ctx.optimalPathLenght);
+      score = calcPathScore(ctx) + calcMapCoverage(ctx)*(ctx.pathLength/ctx.optimalPathLenght) + calcTimePenalty(ctx);
       return score;
    }
    int getScore() const override{

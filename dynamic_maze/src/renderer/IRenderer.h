@@ -4,8 +4,6 @@
 #include "../enemy/IEnemy.h"
 #include "../player/Player.h"
 
-class UIManager;
-
 class IRenderer{
 public:
    virtual void beginFrame()=0;

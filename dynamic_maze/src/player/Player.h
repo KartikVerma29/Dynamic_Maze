@@ -16,7 +16,7 @@ private:
    Direction direction;
 public:
 
-   Player(Position& position, Direction& direction);
+   Player(Position position, Direction direction);
 
    void onEvent(const PlayerHitEvent &event) override;
    void onEvent(const WallStateChangedEvent &event) override;
