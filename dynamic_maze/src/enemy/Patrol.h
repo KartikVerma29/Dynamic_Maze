@@ -5,14 +5,19 @@
 
 class Patrol : public IEnemy, public IEventListener<PlayerMovedEvent>
 {
-public:
+private:
    IPathfinder& pathfinder;
-   Direction facing;
    Direction lastPlayerDirection;
    
-private:
+public:
+   Patrol(IPathfinder& pathfinder, Position position, Direction direction):
+      IEnemy(position, direction), pathfinder(pathfinder) {
+         lastPlayerDirection=DirectionType::DOWN;
+      }
+
    EnemyType getType() const override{ return EnemyType::PATROL ;}
    void onEvent(const WallStateChangedEvent &event) override;
+   void onEvent(const PlayerMovedEvent &event) override;
    void update(Maze &maze, float deltaTime) override;
    bool isDefeatable(const Direction &direction) const override;
 };

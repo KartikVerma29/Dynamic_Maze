@@ -1,5 +1,13 @@
 #include "Blocker.h"
 
+void Blocker::onEvent(const WallStateChangedEvent& event){
+   if(cachedPath.empty()) return ;
+   if(event.isOpen) return;
+   if(isWallOnPath(event)){
+      cachedPath.clear();
+      pathIndex=0;
+   }
+}
 
 Position Blocker::findCorridorTarget(Maze& maze)const{
    Cell* current = maze.getCell((int)position.getX(), (int)position.getY());

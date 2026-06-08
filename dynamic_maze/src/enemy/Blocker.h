@@ -15,5 +15,6 @@ public:
    Blocker(Position position, Direction direction) : IEnemy(position,direction), idleTimer(3.0f), stepsRemaining(0){}
    EnemyType getType() const override{ return EnemyType::BLOCKER ;}
    void update(Maze &maze, float deltaTime) override;
+   void onEvent(const WallStateChangedEvent& event) override;
    bool isDefeatable(const Direction &direction) const override {return isMoving;}
 };

@@ -4,7 +4,7 @@
 
 const float COLLISION_THREHOLD=0.8f;
 
-CollisionDetector::CollisionDetector(EventManager& eventManager, Player& player, const std::vector<IEnemy*>&enemies) :
+CollisionDetector::CollisionDetector(EventManager& eventManager, Player& player, std::vector<IEnemy*>&enemies) :
    eventManager(eventManager), player(player), enemies(enemies) {}
 
 void CollisionDetector::checkCollisions(){

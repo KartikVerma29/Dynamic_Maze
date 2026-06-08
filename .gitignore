@@ -5,6 +5,7 @@ latex
 dynamic_maze/Doxyfile
 dynamic_maze/build
 dynamic_maze/.vscode/
+.cache/
 .codegraphy/*
-
+.directory
 dynamic_maze/.vscode
