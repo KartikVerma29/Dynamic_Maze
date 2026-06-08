@@ -1,0 +1,55 @@
+compilation_database_dir: build
+
+add_compile_flags:
+  - -std=c++22
+  - -I/usr/lib/clang/22/include/
+output_directory: docs/uml
+
+diagrams:
+  dynamic_maze_full:
+    type: class
+    title: "Dynamic Maze — Full Architecture"
+    glob:
+      - src/**/*.h
+      - src/**/*.cpp
+    using_namespace:
+      - ""
+    include:
+      namespaces: []
+    exclude:
+      elements:
+        - std::.*
+        - raylib
+    generate_packages: true
+    package_type: directory
+
+  l1_core:
+    type: class
+    title: "L1 — Atomic & Events"
+    glob:
+      - src/core/*.cpp
+      - src/events/*.cpp
+
+  l2_maze:
+    type: class
+    title: "L2 — Maze"
+    glob:
+      - src/maze/**/*.cpp
+
+  l3_player_enemy:
+    type: class
+    title: "L3 — Player & Enemy"
+    glob:
+      - src/player/*.cpp
+      - src/enemy/**/*.cpp
+      - src/scoring/*.cpp
+      - src/collision/*.cpp
+
+  l4_game_loop:
+    type: class
+    title: "L4 — Game Loop & Modes"
+    glob:
+      - src/modes/*.cpp
+      - src/core_loop/*.cpp
+      - src/renderer/*.cpp
+      - src/ui/*.cpp

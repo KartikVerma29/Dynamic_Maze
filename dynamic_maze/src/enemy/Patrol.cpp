@@ -13,8 +13,3 @@ void Patrol::onEvent(const PlayerMovedEvent& event){
    lastPlayerDirection = event.direction;
 }
 
-void Patrol::update(Maze& maze, float deltaTime){
-   if(cachedPath.empty() || pathIndex>=cachedPath.size()){
-      Position offset
-   }
-}

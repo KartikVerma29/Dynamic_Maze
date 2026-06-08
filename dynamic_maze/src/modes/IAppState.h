@@ -12,6 +12,6 @@ public:
    virtual void render(IRenderer& renderer) = 0;
    virtual bool isFinished() const = 0;
    virtual AppStateType getType()const = 0;
-
+   virtual AppStateType getNextState() const = 0;
    virtual ~IAppState() = default;
 };
