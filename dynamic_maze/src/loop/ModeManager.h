@@ -10,11 +10,13 @@ private:
    std::map<AppStateType, IAppState*> states;
    EventManager& eventManager;
 public:
-   ModeManager(EventManager& eventManager): eventManager(eventManager){}
+   ModeManager(EventManager& eventManager): eventManager(eventManager){
+      currentState=nullptr;
+   }
 
    void registerState(AppStateType stateType, IAppState* appState);
    void transitionTo(AppStateType stateType);
    void update(float deltaTime);
    void render(IRenderer& renderer);
-   IAppState* getCurrentState();
+   IAppState* getCurrentState(){ return currentState; }
 };
