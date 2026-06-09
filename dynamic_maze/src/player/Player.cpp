@@ -7,7 +7,10 @@ void Player::onEvent(const PlayerHitEvent& event){
 }
 
 void Player::onEvent(const PlayerMovedEvent& event){
-   position = event.newPosition;
+   Direction d = event.direction;
+   Position offset = d.toVector();
+   position.setX(position.getX() + offset.getX());
+   position.setY(position.getY() + offset.getY());
    direction = event.direction;
 }
 

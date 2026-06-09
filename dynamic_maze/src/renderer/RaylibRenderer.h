@@ -8,7 +8,7 @@ private:
    int width, height;
    const char* title;
    float cellSize;
-   RenderTexture2D fogTexture;
+   RenderTexture2D fogTexture={0};
    int mazeRows, mazeCols;
 public:
    RaylibRenderer(int width, int height, const char* title);

@@ -36,5 +36,8 @@ public:
    virtual void init()=0;
    virtual void cleanup()=0;
    bool isFinished() const override{ return finished;}
+   
+   AppStateType getNextState() const override { return AppStateType::MAINMENU; }
+   AppStateType getType() const override { return AppStateType::MAINMENU; }
    virtual ~IGameMode() = default;
 };

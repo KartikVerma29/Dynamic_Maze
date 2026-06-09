@@ -8,6 +8,11 @@ class Patrol : public IEnemy, public IEventListener<PlayerMovedEvent>
 private:
    IPathfinder& pathfinder;
    Direction lastPlayerDirection;
+
+   Position diff = Position(
+    cachedPath[pathIndex-1].getX() - position.getX(),
+    cachedPath[pathIndex-1].getY() - position.getY()
+);
    
 public:
    Patrol(IPathfinder& pathfinder, Position position, Direction direction):

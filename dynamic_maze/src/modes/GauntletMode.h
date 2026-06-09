@@ -38,5 +38,5 @@ public:
    void onExit() override;
    void update(float deltaTime) override;
    void render(IRenderer& renderer) override;
-   bool isFinished() const override{ finished;}
+   bool isFinished() const override{ return finished;}
 };

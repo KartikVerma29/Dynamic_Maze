@@ -6,14 +6,12 @@ RaylibRenderer::RaylibRenderer(int width, int height, const char* title):
    width(width), height(height), title(title){
       InitWindow(width,height,title);
       SetTargetFPS(60);
-      fogTexture = LoadRenderTexture(mazeCols, mazeRows);
-      SetTextureFilter(fogTexture.texture, TEXTURE_FILTER_BILINEAR);
-      SetTextureWrap(fogTexture.texture, TEXTURE_WRAP_CLAMP);
+      
 }
 
-RaylibRenderer::~RaylibRenderer(){
-   UnloadRenderTexture(fogTexture);
-   CloseWindow();
+RaylibRenderer::~RaylibRenderer() {
+    if (fogTexture.id != 0) UnloadRenderTexture(fogTexture);
+    CloseWindow();
 }
 
 void RaylibRenderer::beginFrame(){ BeginDrawing(); }
@@ -25,14 +23,17 @@ void RaylibRenderer::clearScreen(){ ClearBackground(BLACK); }
 void RaylibRenderer::drawCell(Cell& cell){
    float pixelX = cell.getCol()*cellSize;
    float pixelY = cell.getRow()*cellSize;
-   DrawRectangle(cell.getCol(), cell.getRow(), pixelX, pixelY, GRAY);
+   DrawRectangle((int)pixelX, (int)pixelY, (int)cellSize, (int)cellSize, BLACK);
 
-   for(auto dir:{DirectionType::DOWN, DirectionType::RIGHT}){
-      Wall* wall = cell.getWall(dir);
-      if(wall && !wall->getIsOpen()){
-         DrawLine(pixelX+cellSize, pixelY, pixelX+cellSize, pixelY+cellSize, WHITE);
-      }
-   }
+   Wall* right = cell.getWall(DirectionType::RIGHT);
+   if(right && !right->getIsOpen())
+      DrawLine((int)(pixelX+cellSize), (int)pixelY,
+             (int)(pixelX+cellSize), (int)(pixelY+cellSize), WHITE);
+
+   Wall* down = cell.getWall(DirectionType::DOWN);
+   if(down && !down->getIsOpen())
+      DrawLine((int)pixelX,            (int)(pixelY+cellSize),
+             (int)(pixelX+cellSize), (int)(pixelY+cellSize), WHITE);
 
 }
 
@@ -53,7 +54,9 @@ void RaylibRenderer::drawMaze(Maze& maze){
 void RaylibRenderer::drawPlayer(Player& player){
    float playerSize = cellSize/2 - 0.1f;
    Position playerPos = player.getPosition();
-   DrawCircle(playerPos.getX(), playerPos.getY(), playerSize, SKYBLUE);
+   float px = playerPos.getY() * cellSize + cellSize * 0.5f;  // col → x
+   float py = playerPos.getX() * cellSize + cellSize * 0.5f;  // row → y
+   DrawCircle((int)px, (int)py, playerSize, SKYBLUE);
 }
 
 void RaylibRenderer::drawEnemy(IEnemy& ienemy){
@@ -66,7 +69,9 @@ void RaylibRenderer::drawEnemy(IEnemy& ienemy){
 
    float enemySize = cellSize/2-0.2f;
    Position enemyPos =ienemy.getPosition();
-   DrawCircle(enemyPos.getX(), enemyPos.getY(), enemySize, colr);
+   float px = enemyPos.getY() * cellSize + cellSize * 0.5f;  // col → x
+   float py = enemyPos.getX() * cellSize + cellSize * 0.5f;  // row → y
+   DrawCircle(px,py,enemySize, colr);
 }
 
 
@@ -81,6 +86,14 @@ void RaylibRenderer::drawFog(Position& position, float radius){
    int tileSize = cellSize;
    int tilesX = mazeCols;
    int tilesY = mazeRows;
+
+   if (fogTexture.id == 0 || mazeCols != fogTexture.texture.width) {
+        if (fogTexture.id != 0) UnloadRenderTexture(fogTexture);
+        fogTexture = LoadRenderTexture(mazeCols, mazeRows);
+        SetTextureFilter(fogTexture.texture, TEXTURE_FILTER_BILINEAR);
+        SetTextureWrap(fogTexture.texture, TEXTURE_WRAP_CLAMP);
+    }
+
 
    BeginTextureMode(fogTexture);
       ClearBackground(BLANK);

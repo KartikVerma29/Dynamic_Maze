@@ -14,13 +14,13 @@ private:
 public:
    template<typename T>
    void subscribe(IEventListener<T>& listener){
-      listeners[typeid(T)].push_back(&listeners);
+      listeners[typeid(T)].push_back(&listener);
    }
 
    template<typename T>
    void unsubcribe(IEventListener<T>& listener){
       auto& vec = listeners[typeid(T)];
-      vec.erase(std::remove(vec.begin(), vec.end(), &listeners), vec.end());
+      vec.erase(std::remove(vec.begin(), vec.end(), &listener), vec.end());
    }
 
   template<typename T>

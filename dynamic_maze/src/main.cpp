@@ -1,86 +1,66 @@
-#include <iostream>
-#include "maze/Maze.h"
 #include "maze/generation/RecursiveBacktrackerGenerator.h"
-#include "maze/generation/PrimsGenerator.h"
-#include "core/Direction.h"
 #include "maze/mutation/GridMazeMutator.h"
 #include "maze/solvability/BFSSolvabilityChecker.h"
+#include "modes/DarkMazeMode.h"
+#include "modes/DynamicMazeMode.h"
+#include "modes/GauntletMode.h"
+#include "modes/IAppState.h"
+#include "scoring/DynamicMazeScoreCalculator.h"
+#include "scoring/DarkMazeScoreCalculator.h"
+#include "scoring/GauntletScoreCalculator.h"
+#include "renderer/RaylibRenderer.h"
+#include "ui/UIManager.h"
+#include <bits/stdc++.h>
+#include "modes/MainMenuMode.h"
+#include "modes/SettingsMode.h"
+#include "loop/GameLoop.h"
 
 using namespace std;
 
-void printMaze(Maze& maze) {
-    int rows = maze.getRows(), cols = maze.getCols();
+#include "events/EventManager.h"
 
-    // print top border
-    for (int c = 0; c < cols; c++) std::cout << "+---";
-    std::cout << "+\n";
+int main(){
 
-    for (int r = 0; r < rows; r++) {
-        // print left border + horizontal walls
-        std::cout << "|";
-        for (int c = 0; c < cols; c++) {
-            Cell* cell = maze.getCell(r, c);
-            std::cout << "   ";
-            // right wall
-            Wall* right = cell->getWall(DirectionType::RIGHT);
-            if (right && right->getIsOpen())
-                std::cout << " ";
-            else
-                std::cout << "|";
-        }
-        std::cout << "\n";
+   cout<<"1. Creating EventManger\n"<<flush;
+   EventManager eventManager;
 
-        // print bottom walls
-        for (int c = 0; c < cols; c++) {
-            Cell* cell = maze.getCell(r, c);
-            Wall* down = cell->getWall(DirectionType::DOWN);
-            if (down && down->getIsOpen())
-                std::cout << "+   ";
-            else
-                std::cout << "+---";
-        }
-        std::cout << "+\n";
-    }
-}
+   cout<<"2. Creating Renderer\n"<<flush;
+   RaylibRenderer renderer(800,600, "Dynamic Maze");
 
-int main() {
-    float row,col;
-    cin>>row>>col;
-    Maze maze(row, col);
-    RecursiveBacktrackerGenerator gen;
-    gen.generate(maze);
-    BFSSolvabilityChecker checker;
-    EventManager eventManager;
+   cout<<"3. Creating UIManager\n"<<flush;
+   UIManager uiManagere(eventManager);
 
-    Position playerPos{0, 0};
-    Position exitPos{row-1, col-1};
+   cout<<"4. Creating generator\n"<<flush;
+   RecursiveBacktrackerGenerator generator;
 
-    GridMazeMutator mutator(checker, eventManager);
+   cout<<"5. Creating checker\n"<<flush;
+   BFSSolvabilityChecker checker;
 
-    std::cout << "=== RecursiveBacktracker ===\n";
-    printMaze(maze);
+   cout<<"6. Creating mutator\n"<<flush;
+   GridMazeMutator mutator(checker, eventManager);
 
+   cout<<"7. Creating scorers\n"<<flush;
+   DynamicMazeScoreCalculator dynamicScorer;
+   DarkMazeScoreCalculator darkScorer;
+   GauntletScoreCalculator gauntletScorer;
 
-    bool solvable = checker.isSolvable(maze, playerPos, exitPos);
-    std::cout << "Is maze solvable? " << (solvable ? "Yes" : "No") << "\n";
+   cout<<"8. Creating modes\n"<<flush;
+   DynamicMazeMode dynamicMode(mutator, dynamicScorer, eventManager, generator);
+   DarkMazeMode darkMode(mutator, darkScorer, eventManager, generator);
+   GauntletMode gauntletMode(mutator, gauntletScorer, eventManager, generator);
+   MainMenuMode mainMenu(uiManagere);
+   SettingsMode settings(uiManagere);
 
+   cout<<"9. Starting gameloop\n"<<flush;
+   GameLoop gameLoop(renderer, eventManager);
+   gameLoop.getModeManager().registerState(AppStateType::MAINMENU, &mainMenu);
+   gameLoop.getModeManager().registerState(AppStateType::DYNAMIC, &dynamicMode);
+   gameLoop.getModeManager().registerState(AppStateType::DARK, &darkMode);
+   gameLoop.getModeManager().registerState(AppStateType::GAUNTLET, &gauntletMode);
+   gameLoop.getModeManager().registerState(AppStateType::SETTINGS, &settings);
 
-    auto path = checker.getPath(maze, playerPos, exitPos);
-    std::cout << "Path Length: " << path.size() << "\n";
-    
+   gameLoop.getModeManager().transitionTo(AppStateType::MAINMENU);
+   gameLoop.run();
 
-    mutator.mutate(maze, playerPos, exitPos);
-        std::cout << "\n=== After Mutation ===\n";
-    printMaze(maze);
-    std::cout << "Is maze solvable after mutation? " << (checker.isSolvable(maze, playerPos, exitPos) ? "Yes" : "No") << "\n";
-
-
-    // Maze maze2(10, 10);
-    // PrimsGenerator prim;
-    // prim.generate(maze2);
-
-    // std::cout << "\n=== Prims ===\n";
-    // printMaze(maze2);
-
-    return 0;
+   return 0;
 }

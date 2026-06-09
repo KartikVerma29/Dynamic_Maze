@@ -26,5 +26,6 @@ public:
 
    void run();
    void stop(){ isRunning=false;}
+   ModeManager& getModeManager(){ return *modeManager;}
 
 };
