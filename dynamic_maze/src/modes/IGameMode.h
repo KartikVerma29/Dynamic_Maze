@@ -30,8 +30,8 @@ protected:
    }
 
 public:
-   IGameMode(IMazeMutator& mutator, IScoreCalculator& scorer, EventManager& eventManager, IMazeGenerator& generator):
-      mutator(mutator), scorer(scorer), eventManager(eventManager), generator(generator) {}
+   IGameMode(IMazeMutator& mutator, IScoreCalculator& scorer, EventManager& eventManager, IMazeGenerator& generator, UIManager& uiManager):
+      mutator(mutator), scorer(scorer), eventManager(eventManager), generator(generator), IAppState(uiManager) {}
  
    virtual void init()=0;
    virtual void cleanup()=0;

@@ -4,11 +4,10 @@
 
 class MainMenuMode: public IAppState{
 private:
-   UIManager& uiManager;
    AppStateType nextState;
    bool finished=false;
 public:
-   MainMenuMode(UIManager& uiManager): uiManager(uiManager){}
+   MainMenuMode(UIManager& uiManager): IAppState(uiManager){}
    void onEnter() override;
    void onExit() override;
    void update(float deltaTime) override;

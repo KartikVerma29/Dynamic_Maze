@@ -5,10 +5,9 @@
 class SettingsMode:public IAppState
 {
 private:
-   UIManager& uiManager;
    bool finished=false;
 public:
-   SettingsMode(UIManager& uiManager): uiManager(uiManager){}
+   SettingsMode(UIManager& uiManager): IAppState(uiManager){}
 
    void onEnter() override;
    void onExit() override;

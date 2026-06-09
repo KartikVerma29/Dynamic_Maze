@@ -7,11 +7,23 @@ void Player::onEvent(const PlayerHitEvent& event){
 }
 
 void Player::onEvent(const PlayerMovedEvent& event){
+   if(!maze) return;
    Direction d = event.direction;
    Position offset = d.toVector();
-   position.setX(position.getX() + offset.getX());
-   position.setY(position.getY() + offset.getY());
-   direction = event.direction;
+   
+   int newRow = position.getX() + offset.getX();
+   int newCol = position.getY() + offset.getY();
+
+   Cell* current = maze->getCell(position.getX(), position.getY()); 
+   if(!current) return;
+
+   Wall* wall = current->getWall(event.direction.getType());
+   if(wall && wall->getIsOpen()){
+      position.setX(newRow);
+      position.setY(newCol);
+      direction = event.direction;
+   }
+
 }
 
 void Player::onEvent(const WallStateChangedEvent& event){

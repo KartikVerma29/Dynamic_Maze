@@ -29,8 +29,8 @@ private:
 
 public:
 
-   GauntletMode(IMazeMutator& mutator, GauntletScoreCalculator& scorer, EventManager& eventManager, IMazeGenerator& generator, int startLevel=1):
-      IGameMode(mutator, scorer, eventManager, generator), gauntletScorer(scorer) {}
+   GauntletMode(UIManager uiManager ,IMazeMutator& mutator, GauntletScoreCalculator& scorer, EventManager& eventManager, IMazeGenerator& generator, int startLevel=1):
+      IGameMode(mutator, scorer, eventManager, generator, uiManager), gauntletScorer(scorer) {}
 
    void init() override;
    void cleanup() override;

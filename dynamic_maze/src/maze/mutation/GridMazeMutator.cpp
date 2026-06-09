@@ -4,31 +4,24 @@
 #include <algorithm>
 #include <tuple>
 
-
-
-
 std::vector<Wall*> GridMazeMutator::selectWalls(Maze& maze, const Position& playerPos){
    std::vector<Wall*> result;
    
-   for(const auto&w : maze.getWalls()){
+   float minThreshold = 1.0f;
+   float maxThreshold = 2.0f;
+
+   for(const auto& w:maze.getWalls()){
       Wall* wall = w.get();
-      result.push_back(wall);
+
+      auto[r1,c1] = wall->getCells().first;
+      auto[r2,c2] = wall->getCells().second;
+
+      Position mid( (r1+c1)/2.0f, (r2+c2)/2.0f );
+      float d = playerPos.distanceTo(mid);
+
+      if(d>= minThreshold && d<maxThreshold)
+         result.push_back(wall);
    }
-
-   int cnt = std::min(batchSize, (int)result.size());
-
-   std::nth_element(result.begin(), result.begin()+cnt, result.end(),
-         [&playerPos](const Wall* a, const Wall* b){
-   
-            auto [ar1, ac1, ar2, ac2] = std::make_tuple(a->getCells().first.first, a->getCells().first.second, a->getCells().second.first, a->getCells().second.second);
-            auto[br1, bc1, br2, bc2]=   std::make_tuple(b->getCells().first.first, b->getCells().first.second, b->getCells().second.first, b->getCells().second.second);
-           
-            Position aMid((ar1+ar2)/2.0f, (ac1+ac2)/2.0f);
-            Position bMid((br1+br2)/2.0f, (bc1+bc2)/2.0f);
-         return playerPos.distanceTo(aMid) < playerPos.distanceTo(bMid);
-   });
-   
-   result.resize(cnt);
    return result;
 }
 

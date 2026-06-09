@@ -45,9 +45,9 @@ int main(){
    GauntletScoreCalculator gauntletScorer;
 
    cout<<"8. Creating modes\n"<<flush;
-   DynamicMazeMode dynamicMode(mutator, dynamicScorer, eventManager, generator);
-   DarkMazeMode darkMode(mutator, darkScorer, eventManager, generator);
-   GauntletMode gauntletMode(mutator, gauntletScorer, eventManager, generator);
+   DynamicMazeMode dynamicMode(uiManagere, mutator, dynamicScorer, eventManager, generator);
+   DarkMazeMode darkMode(uiManagere,mutator, darkScorer, eventManager, generator);
+   GauntletMode gauntletMode(uiManagere ,mutator, gauntletScorer, eventManager, generator);
    MainMenuMode mainMenu(uiManagere);
    SettingsMode settings(uiManagere);
 

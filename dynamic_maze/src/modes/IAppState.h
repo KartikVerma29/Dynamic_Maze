@@ -1,11 +1,15 @@
 #pragma once
 #include "../renderer/IRenderer.h"
+#include "../ui/UIManager.h"
 
 enum class AppStateType {SETTINGS, MAINMENU, DARK, DYNAMIC, GAUNTLET};
 
 
 class IAppState{
+protected:
+   UIManager& uiManager;
 public:
+   IAppState(UIManager& uiManager) : uiManager(uiManager) {}
    virtual void onEnter() = 0;
    virtual void onExit() = 0;
    virtual void update(float deltaTime) = 0;

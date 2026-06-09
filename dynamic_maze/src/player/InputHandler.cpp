@@ -12,9 +12,9 @@ void InputHandler::update(){
 }
 
 std::optional<Direction> InputHandler::readKeyboard() {
-    if (IsKeyDown(KEY_UP)    || IsKeyDown(KEY_W)) return Direction(DirectionType::UP);
-    if (IsKeyDown(KEY_DOWN)  || IsKeyDown(KEY_S)) return Direction(DirectionType::DOWN);
-    if (IsKeyDown(KEY_LEFT)  || IsKeyDown(KEY_A)) return Direction(DirectionType::LEFT);
-    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) return Direction(DirectionType::RIGHT);
+    if (IsKeyPressed(KEY_UP)    || IsKeyPressed(KEY_W)) return Direction(DirectionType::UP);
+    if (IsKeyPressed(KEY_DOWN)  || IsKeyPressed(KEY_S)) return Direction(DirectionType::DOWN);
+    if (IsKeyPressed(KEY_LEFT)  || IsKeyPressed(KEY_A)) return Direction(DirectionType::LEFT);
+    if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) return Direction(DirectionType::RIGHT);
     return std::nullopt;
 }
