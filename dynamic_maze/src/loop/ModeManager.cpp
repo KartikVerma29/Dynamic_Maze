@@ -1,4 +1,5 @@
 #include "ModeManager.h"
+#include "modes/IAppState.h"
 
 void ModeManager::registerState(AppStateType stateType, IAppState* appState){
    states[stateType] = appState;
@@ -16,10 +17,29 @@ void ModeManager::update(float deltaTime){
    if(currentState==nullptr) return ;
 
    currentState->update(deltaTime);
+   int index = uiManager.getSelectedIndex();
+   if(index!=-1){
+      uiManager.resetSelectedIndex();
+      switch (index) {
+         case 0: transitionTo(AppStateType::MAINMENU); break;
+         case 1: transitionTo(AppStateType::DYNAMIC); break;
+         case 2: transitionTo(AppStateType::DARK); break;
+         case 3: transitionTo(AppStateType::GAUNTLET); break;
+         case 4: transitionTo(AppStateType::SETTINGS); break;
+         case 10:
+            currentState->onExit();
+            currentState->onEnter();
+            break;
+         case 20: transitionTo(AppStateType::DYNAMIC); break;
+      }
+      return;
+   }
+   
    if( currentState->isFinished()){
       AppStateType nextState = currentState->getNextState();
       transitionTo(nextState);
    }
+
 }
 
 void ModeManager::render(IRenderer& renderer){

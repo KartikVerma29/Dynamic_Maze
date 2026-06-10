@@ -1,5 +1,7 @@
 #include "MainMenuMode.h"
 
+// state = 0
+
 void MainMenuMode::onEnter(){
    finished=false;
    uiManager.resetSelectedIndex();

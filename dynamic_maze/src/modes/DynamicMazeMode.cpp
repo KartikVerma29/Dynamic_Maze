@@ -1,4 +1,5 @@
 #include "DynamicMazeMode.h"
+// state = 1
 
 void DynamicMazeMode::init(){
     int mazeSize = calcMazeSize(currentLevel);
@@ -51,7 +52,6 @@ void DynamicMazeMode::update(float deltaTime){
     
     if(player->getPosition() == exitPos){
         finished=true;
-
         ScoreContext ctx;
         ctx.timeTaken = elapsedTime;
         ctx.pathLength = totalsteps;
@@ -66,9 +66,9 @@ void DynamicMazeMode::render(IRenderer& renderer){
     renderer.drawMaze(*maze);
     renderer.drawPlayer(*player);
 
-    if( finished)
-        uiManager.drawLevelComplete(scorer.getScore());
-    else uiManager.drawHUD(scorer.getScore());
+    uiManager.drawHUD(scorer.getScore());
+
+    if(finished) uiManager.drawLevelComplete(scorer.getScore());
 
     renderer.endFrame();
 }
@@ -83,6 +83,6 @@ void DynamicMazeMode::onEvent(const PlayerMovedEvent& event){
     if(stepCounter>=stepThreshold){
         stepCounter=0;
         mutator.mutate(*maze, player->getPosition(), exitPos);
-        stepThreshold = 15+(rand()%10-5);
+        stepThreshold = 10+(rand()%10-5);
     }
 }

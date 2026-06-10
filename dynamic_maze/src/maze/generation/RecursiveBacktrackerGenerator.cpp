@@ -3,6 +3,7 @@
 #include <stack>
 #include "../Maze.h"
 #include <iostream>
+#include <random>
 /*
 1. Choose the initial cell, mark it as visited and push it to the stack
 2. While the stack is not empty
@@ -31,7 +32,6 @@ std::vector<std::pair<int,int>> RecursiveBacktrackerGenerator::getUnvisit(Maze& 
     }
     return result;
 }
-
 Wall* RecursiveBacktrackerGenerator::getWallbetween(Cell* cell, int row, int col, int nRow, int nCol) {
     DirectionType dir;
     if (nRow < row) dir =  DirectionType::UP;
@@ -43,7 +43,15 @@ Wall* RecursiveBacktrackerGenerator::getWallbetween(Cell* cell, int row, int col
 
 void RecursiveBacktrackerGenerator::generate(Maze& maze){
    int rows = maze.getRows(), cols = maze.getCols();
-   int sRow = std::rand()%rows, sCol = std::rand()%cols;
+
+   std::random_device rd;
+   std::mt19937 gen(rd());
+   std::uniform_int_distribution<> rowDist(0, rows-1);
+   std::uniform_int_distribution<> colDist(0, cols-1);
+
+    
+   int sRow = rowDist(gen);
+   int sCol = colDist(gen);
    
    Cell* cell = maze.getCell(sRow, sCol);
     if (!cell){

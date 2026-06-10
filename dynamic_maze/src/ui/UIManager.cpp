@@ -13,6 +13,9 @@ void UIManager::drawHUD(int score){
    std::string str = std::to_string(score);
    const char* ch = str.c_str();
    DrawText(ch, 1, 1, 20, WHITE);
+
+   float w=80,h=20;
+   if(GuiButton({(float)GetScreenWidth()-1,0, w,h}, "Back")) selectedIndex=0;
 }
  
 void UIManager::drawTime(float deltaTime){

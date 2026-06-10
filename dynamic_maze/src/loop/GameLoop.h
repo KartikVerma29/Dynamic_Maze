@@ -1,6 +1,7 @@
 #pragma once
 #include "ModeManager.h"
 #include "../player/InputHandler.h"
+#include "ui/UIManager.h"
 #include <memory>
 class GameLoop{
 private:
@@ -18,9 +19,9 @@ private:
    float calcDeltaTime();
 public:
 
-   GameLoop(IRenderer& renderer, EventManager& eventManager, float targetFPS=60):
+   GameLoop(IRenderer& renderer, EventManager& eventManager, UIManager& uiManager ,float targetFPS=60):
       renderer(renderer), eventManager(eventManager), targetFPS(targetFPS), isRunning(true) {
-         modeManager = std::make_unique<ModeManager>(eventManager);
+         modeManager = std::make_unique<ModeManager>(eventManager, uiManager);
          inputHandler = std::make_unique<InputHandler>(eventManager);
       }
 

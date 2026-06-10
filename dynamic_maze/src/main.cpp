@@ -25,10 +25,10 @@ int main(){
    EventManager eventManager;
 
    cout<<"2. Creating Renderer\n"<<flush;
-   RaylibRenderer renderer(800,600, "Dynamic Maze");
+   RaylibRenderer renderer(1080,720, "Dynamic Maze");
 
    cout<<"3. Creating UIManager\n"<<flush;
-   UIManager uiManagere(eventManager);
+   UIManager uiManager(eventManager);
 
    cout<<"4. Creating generator\n"<<flush;
    RecursiveBacktrackerGenerator generator;
@@ -45,14 +45,14 @@ int main(){
    GauntletScoreCalculator gauntletScorer;
 
    cout<<"8. Creating modes\n"<<flush;
-   DynamicMazeMode dynamicMode(uiManagere, mutator, dynamicScorer, eventManager, generator);
-   DarkMazeMode darkMode(uiManagere,mutator, darkScorer, eventManager, generator);
-   GauntletMode gauntletMode(uiManagere ,mutator, gauntletScorer, eventManager, generator);
-   MainMenuMode mainMenu(uiManagere);
-   SettingsMode settings(uiManagere);
+   DynamicMazeMode dynamicMode(uiManager, mutator, dynamicScorer, eventManager, generator);
+   DarkMazeMode darkMode(uiManager,mutator, darkScorer, eventManager, generator);
+   GauntletMode gauntletMode(uiManager ,mutator, gauntletScorer, eventManager, generator);
+   MainMenuMode mainMenu(uiManager);
+   SettingsMode settings(uiManager);
 
    cout<<"9. Starting gameloop\n"<<flush;
-   GameLoop gameLoop(renderer, eventManager);
+   GameLoop gameLoop(renderer, eventManager, uiManager);
    gameLoop.getModeManager().registerState(AppStateType::MAINMENU, &mainMenu);
    gameLoop.getModeManager().registerState(AppStateType::DYNAMIC, &dynamicMode);
    gameLoop.getModeManager().registerState(AppStateType::DARK, &darkMode);

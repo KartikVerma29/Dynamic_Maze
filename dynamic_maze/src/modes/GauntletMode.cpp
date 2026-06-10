@@ -12,6 +12,8 @@
 #include "scoring/IScoreCalculator.h"
 #include <memory>
 
+// state = 3
+
 void GauntletMode::rebuildCollisionDetector(){
    std::vector<IEnemy*> ptrs;
    for(auto& e:enemies) ptrs.push_back(e.get());

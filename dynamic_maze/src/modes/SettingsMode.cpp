@@ -1,5 +1,6 @@
 #include "SettingsMode.h"
 
+// state = 4
 void SettingsMode::onEnter(){
    finished=false;
    uiManager.resetSelectedIndex();
