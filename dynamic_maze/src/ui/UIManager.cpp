@@ -12,10 +12,10 @@ UIManager::UIManager(EventManager& eventManager):
 void UIManager::drawHUD(int score){
    std::string str = std::to_string(score);
    const char* ch = str.c_str();
-   DrawText(ch, 1, 1, 20, WHITE);
+   DrawText(ch, GetScreenWidth()-MeasureText(ch, 20), 1+24, 20, WHITE);
 
    float w=80,h=20;
-   if(GuiButton({(float)GetScreenWidth()-1,0, w,h}, "Back")) selectedIndex=0;
+   if(GuiButton({(float)GetScreenWidth()-w,1, w,h}, "Back")) selectedIndex=0;
 }
  
 void UIManager::drawTime(float deltaTime){
@@ -59,9 +59,10 @@ void UIManager::drawLevelComplete(int score){
    int sw = GetScreenWidth();
    int sh = GetScreenHeight();
 
+   DrawRectangleGradientEx({(float)sw/4, (float)sh/4, (float)sw/2, (float)sh/2}, GRAY, GRAY, BLACK, BLACK);
    DrawText("LEVEL COMPLETE", sw/2-MeasureText("LEVEL COMPLETE", 36)/2 , sh/3 , 36,GREEN);
 
-   std::string str = "Score"+std::to_string(score);
+   std::string str = "Score : "+std::to_string(score);
    const char* ch = str.c_str();
 
    DrawText(ch, sw/2 - MeasureText(ch, 24), sh/3+60, 24, WHITE);

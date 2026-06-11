@@ -24,6 +24,9 @@ public:
    int getScore() const override{
       return score;
    }
+   void resetScore() override{
+      score=0;
+   }
 }; 
 
 

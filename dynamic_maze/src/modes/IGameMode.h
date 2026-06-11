@@ -22,7 +22,7 @@ protected:
    float elapsedTime = 0.0f;
    int currentLevel=1;
    int stepThreshold=10;
-
+   int levelCompleted;
    int calcMazeSize(int level){
       float maxSize = 50.0f;
       float k=0.5f;

@@ -12,5 +12,6 @@ class IScoreCalculator{
 public:
    virtual int calculate(const ScoreContext& ctx ) = 0;
    virtual int getScore()const = 0;
+   virtual void resetScore()=0;
    virtual ~IScoreCalculator() = default;
 };

@@ -9,10 +9,9 @@ private:
    Position exitPos;
    BFSSolvabilityChecker checker;
    std::vector<Position> optimalPath;
-
 public:
 
-   DynamicMazeMode(UIManager uiManager, IMazeMutator& mutator, IScoreCalculator& scorer, EventManager& eventManager, IMazeGenerator& generator, int startLevel=1):
+   DynamicMazeMode(UIManager& uiManager, IMazeMutator& mutator, IScoreCalculator& scorer, EventManager& eventManager, IMazeGenerator& generator, int startLevel=1):
                   IGameMode(mutator, scorer, eventManager, generator, uiManager), exitPos(0,0) {
                      currentLevel=startLevel;
                   }

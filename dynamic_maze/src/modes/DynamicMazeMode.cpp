@@ -1,11 +1,18 @@
 #include "DynamicMazeMode.h"
+#include "events/events/PlayerMovedEvent.h"
 // state = 1
 
 void DynamicMazeMode::init(){
     int mazeSize = calcMazeSize(currentLevel);
     maze = std::make_unique<Maze>(mazeSize,mazeSize);
     generator.generate(*maze);
+
     finished=false;
+    levelCompleted=false;
+    elapsedTime=0.0f;
+    totalsteps=0;
+    stepCounter=0;
+    scorer.resetScore();
     player = std::make_unique<Player>(Position(0,0), Direction(DirectionType::RIGHT));
     exitPos.setX(mazeSize-1);
     exitPos.setY(mazeSize-1);
@@ -45,13 +52,17 @@ void DynamicMazeMode::cleanup(){
     eventManager.unsubcribe<PlayerMovedEvent>(*player);
     eventManager.unsubcribe<PlayerHitEvent>(*player);
     eventManager.unsubcribe<WallStateChangedEvent>(*player);
+
+    eventManager.unsubcribe<PlayerMovedEvent>(*this);
 }
 
 void DynamicMazeMode::update(float deltaTime){
+    if(levelCompleted) return;
     elapsedTime+=deltaTime;
     
     if(player->getPosition() == exitPos){
-        finished=true;
+        levelCompleted=true;
+        currentLevel++;
         ScoreContext ctx;
         ctx.timeTaken = elapsedTime;
         ctx.pathLength = totalsteps;
@@ -68,7 +79,9 @@ void DynamicMazeMode::render(IRenderer& renderer){
 
     uiManager.drawHUD(scorer.getScore());
 
-    if(finished) uiManager.drawLevelComplete(scorer.getScore());
+    if(levelCompleted){
+        uiManager.drawLevelComplete(scorer.getScore());
+    } 
 
     renderer.endFrame();
 }
