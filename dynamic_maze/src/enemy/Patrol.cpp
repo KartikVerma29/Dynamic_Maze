@@ -45,7 +45,9 @@ void Patrol::update(Maze& maze, float deltaTime) {
         cachedPath.push_back(options[rand() % options.size()]);
     }
 
-    position = cachedPath[pathIndex];
-    direction = Direction(DirectionType::UP);
-    pathIndex++;
+    if(!cachedPath.empty() && pathIndex<(int)cachedPath.size()){
+        position = cachedPath[pathIndex];
+        direction = Direction(DirectionType::UP);
+        pathIndex++;
+    }
 }

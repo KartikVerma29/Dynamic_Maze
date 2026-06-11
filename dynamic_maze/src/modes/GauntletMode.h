@@ -7,8 +7,11 @@
 #include "../enemy/pathfinding/AStarPathfinder.h"
 #include "../events/events/EnemyDefeatedEvent.h"
 #include "../scoring/GauntletScoreCalculator.h"
+#include "events/IEventListener.h"
+#include "events/events/PlayerHitEvent.h"
+#include "events/events/PlayerMovedEvent.h"
 
-class GauntletMode:public IGameMode
+class GauntletMode:public IGameMode, public IEventListener<PlayerHitEvent>
 {
 private:
    std::vector<std::unique_ptr<IEnemy>> enemies;
@@ -17,24 +20,27 @@ private:
    GauntletScoreCalculator& gauntletScorer;   
 
    float spawnTimer = 0.0f;
-   float spawnInterval=10.0f;
+   float spawnInterval=3.0f;
    int maxEnemies=5;
    std::unique_ptr<CollisionDetector> collisionDetector;
 
    // PatrolPathfinder patrolPathfinder;
    AStarPathfinder astarPathfinder;
 
+   float invincibilityTime = 0.0f;
+
    void spawnEnemy();
    void rebuildCollisionDetector();
 
 public:
 
-   GauntletMode(UIManager uiManager ,IMazeMutator& mutator, GauntletScoreCalculator& scorer, EventManager& eventManager, IMazeGenerator& generator, int startLevel=1):
+   GauntletMode(UIManager& uiManager ,IMazeMutator& mutator, GauntletScoreCalculator& scorer, EventManager& eventManager, IMazeGenerator& generator, int startLevel=1):
       IGameMode(mutator, scorer, eventManager, generator, uiManager), gauntletScorer(scorer) {}
 
    void init() override;
    void cleanup() override;
    void onEnter() override;
+   void onEvent(const PlayerHitEvent&) override;
    void onExit() override;
    void update(float deltaTime) override;
    void render(IRenderer& renderer) override;

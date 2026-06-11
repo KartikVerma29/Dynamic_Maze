@@ -22,14 +22,14 @@ static float heuristic(Cell* a, Cell* b){
    return posA.distanceTo(posB);
 }
 
-std::vector<Position> AStarPathfinder::findPath(Maze& maze, Position& from, Position& to){
+std::vector<Position> AStarPathfinder::findPath(Maze& maze, Position& from,const Position& to){
    std::vector<Position> path;
    std::priority_queue<ANode, std::vector<ANode>, std::greater<ANode>> openSet;
    std::unordered_map<Cell*, Cell*> parent;
    std::unordered_map<Cell*, float> gCost;
    
    Cell* start = maze.getCell(from.getX(), from.getY());
-   Cell* goal = maze.getCell(to.getY(), from.getY());
+   Cell* goal = maze.getCell(to.getX(), to.getY());
    if(!start || !goal) return {};
    if(start==goal) return {from};
 

@@ -10,6 +10,9 @@ CollisionDetector::CollisionDetector(EventManager& eventManager, Player& player,
 void CollisionDetector::checkCollisions(){
    if(enemies.empty()) return ;
    for(IEnemy* e:enemies){
+
+      if(e->getIsDefeated()) continue;
+
       if(player.getPosition().distanceTo(e->getPosition())<COLLISION_THREHOLD){
          if(e->isDefeatable(player.getDirection())){
             eventManager.publish<EnemyDefeatedEvent>({e,e->getPosition()});

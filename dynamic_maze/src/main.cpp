@@ -1,4 +1,5 @@
 #include "maze/generation/RecursiveBacktrackerGenerator.h"
+#include "maze/generation//PrimsGenerator.h"
 #include "maze/mutation/GridMazeMutator.h"
 #include "maze/solvability/BFSSolvabilityChecker.h"
 #include "modes/DarkMazeMode.h"
@@ -32,6 +33,7 @@ int main(){
 
    cout<<"4. Creating generator\n"<<flush;
    RecursiveBacktrackerGenerator generator;
+   PrimsGenerator primGenerator;
 
    cout<<"5. Creating checker\n"<<flush;
    BFSSolvabilityChecker checker;
@@ -47,7 +49,7 @@ int main(){
    cout<<"8. Creating modes\n"<<flush;
    DynamicMazeMode dynamicMode(uiManager, mutator, dynamicScorer, eventManager, generator);
    DarkMazeMode darkMode(uiManager,mutator, darkScorer, eventManager, generator);
-   GauntletMode gauntletMode(uiManager ,mutator, gauntletScorer, eventManager, generator);
+   GauntletMode gauntletMode(uiManager ,mutator, gauntletScorer, eventManager, primGenerator);
    MainMenuMode mainMenu(uiManager);
    SettingsMode settings(uiManager);
 

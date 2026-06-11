@@ -2,6 +2,7 @@
 #include "IGameMode.h"
 #include "../maze/solvability/BFSSolvabilityChecker.h"
 
+
 class DarkMazeMode: public IGameMode
 {
 private:

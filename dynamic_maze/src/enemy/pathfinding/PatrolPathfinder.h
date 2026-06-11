@@ -12,6 +12,6 @@ public:
 
    PatrolPathfinder(std::vector<Position> route, int currentTarget=0);
 
-   std::vector<Position> findPath(Maze &maze, Position &from, Position &to) override;
+   std::vector<Position> findPath(Maze &maze, Position &from,const Position &to) override;
    ~PatrolPathfinder() = default;
 };

@@ -12,8 +12,8 @@ private:
    std::vector<IEnemy*> enemies;
    Player& player;
 
-   void checkCollisions();
 public:
    CollisionDetector(EventManager& eventManager, Player& player,std::vector<IEnemy*>& enemies);
+   void checkCollisions();
    void onEvent(const PlayerMovedEvent &event) override;
 };

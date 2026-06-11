@@ -1,4 +1,6 @@
 #include "PrimsGenerator.h"
+#include <cstdlib>
+#include <random>
 
 /*
 1. Start with a grid full of walls.
@@ -24,7 +26,14 @@ void PrimsGenerator::addFWalls(Maze& maze, int row, int col, std::vector<Wall*>&
 
 void PrimsGenerator::generate(Maze& maze){
    int rows = maze.getRows(), cols = maze.getCols();
-   int sRow = std::rand()%rows, sCol = std::rand()%cols;
+
+   std::random_device rd;
+   std::mt19937 gen(rd());
+   std::uniform_int_distribution<> rowDis(0,rows-1);
+   std::uniform_int_distribution<> colDis(0,cols-1);
+
+   int sRow = rowDis(gen);
+   int sCol = colDis(gen);
 
    maze.getCell(sRow, sCol)->setVisited(true);
 

@@ -40,33 +40,20 @@ Position Blocker::findCorridorTarget(Maze& maze)const{
 }
 
 void Blocker::update(Maze& maze, float deltaTime){
-
    if(!isMoving){
       idleTimer-=deltaTime;
       if(idleTimer<=0.0f){
          isMoving=true;
          stepsRemaining=3;
-         cachedPath.clear();
-         pathIndex=0;
-         cachedPath.push_back(findCorridorTarget(maze));
       }
-   } else{
-      if(cachedPath.empty() || pathIndex>=cachedPath.size()){
-         isMoving=false;
-         idleTimer=3.0f;
-         cachedPath.clear();
-         pathIndex=0;
-         return;
-      }
-
-      position = cachedPath[pathIndex];
-      pathIndex++;
-      stepsRemaining--;
+   } else {
       if(stepsRemaining<=0){
          isMoving=false;
          idleTimer=3.0f;
-         cachedPath.clear();
-         pathIndex=0;
+         return;
       }
+
+      position = findCorridorTarget(maze);
+      stepsRemaining--;
    }
 }
