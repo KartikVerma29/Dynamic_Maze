@@ -30,6 +30,9 @@ protected:
    bool getIsDefeated() const{
       return isDefeated;
    };
+   void setDefeated(){
+      isDefeated=true;
+   }
    
    virtual ~IEnemy() = default;
 };

@@ -63,6 +63,6 @@ int main(){
 
    gameLoop.getModeManager().transitionTo(AppStateType::MAINMENU);
    gameLoop.run();
-
+   
    return 0;
 }

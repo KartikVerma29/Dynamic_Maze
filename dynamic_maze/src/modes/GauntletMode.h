@@ -15,22 +15,21 @@ class GauntletMode:public IGameMode, public IEventListener<PlayerHitEvent>
 {
 private:
    std::vector<std::unique_ptr<IEnemy>> enemies;
+   std::vector<float> respawnTimers;
+   int maxEnemies=5;
+   
    Lives lives{3,3};
    float survivalTime=0;
    GauntletScoreCalculator& gauntletScorer;   
 
-   float spawnTimer = 0.0f;
-   float spawnInterval=3.0f;
-   int maxEnemies=5;
    std::unique_ptr<CollisionDetector> collisionDetector;
-
    // PatrolPathfinder patrolPathfinder;
    AStarPathfinder astarPathfinder;
 
    float invincibilityTime = 0.0f;
 
-   void spawnEnemy();
-   void rebuildCollisionDetector();
+   void spawnEnemy(int slotIndex);
+   // void rebuildCollisionDetector();
 
 public:
 

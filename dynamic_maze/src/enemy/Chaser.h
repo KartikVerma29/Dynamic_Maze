@@ -10,7 +10,7 @@ private:
    // Position lastKnownPlayerPos;
    const Player& player;
    float moveTimer=0.0f;
-   float moveInterval = 0.2f;
+   float moveInterval = 0.4f;
 public:
    Chaser(IPathfinder& pathfinder, Position position, Direction direction, const Player& player);
    

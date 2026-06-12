@@ -5,6 +5,8 @@ class Blocker : public IEnemy{
 private:
    bool isMoving=false;
    float idleTimer;
+   float moveTimer=0.0f;
+   float moveInterval=0.f;
    int stepsRemaining;
    Position targetPos;
    

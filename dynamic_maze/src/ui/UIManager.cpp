@@ -21,7 +21,7 @@ void UIManager::drawHUD(int score){
 void UIManager::drawTime(float deltaTime){
 
    const char* ch = TextFormat("Time: %.1f", deltaTime);
-   DrawText(ch, GetScreenWidth()/2 - MeasureText(ch,4) , 1 ,20,WHITE);
+   DrawText(ch, (float)GetScreenWidth()-MeasureText(ch, 20) , 1+44 ,20,WHITE);
 }
 
 void UIManager::drawMainMenu(){
@@ -41,6 +41,7 @@ void UIManager::drawGameOver(int score){
    int sw = GetScreenWidth();
    int sh = GetScreenHeight();
 
+   DrawRectangleGradientEx({(float)sw/4, (float)sh/4, (float)sw/2, (float)sh/2}, GRAY, GRAY, BLACK, BLACK);
    DrawText("GAME OVER", sw/2-MeasureText("GAME OVER", 40)/2 , sh/3 , 40,RED);
 
    std::string str = "Score: "+std::to_string(score);
@@ -95,7 +96,7 @@ void UIManager::drawSettings() {
 void UIManager::drawLives(const Lives& lives){
    int sw = GetScreenWidth();
    for(int i=0; i<lives.getCount(); i++){
-      DrawCircle(sw-20-(i*25),20,8,RED);
+      DrawCircle(sw-20-(i*25),74,8,RED);
    }
 }
 

@@ -2,6 +2,8 @@
 #include "../enemy/Chaser.h"
 #include "../enemy/Blocker.h"
 #include "../enemy/Patrol.h"
+#include "collision/CollisionDetector.h"
+#include "core/Position.h"
 #include "enemy/IEnemy.h"
 #include "events/events/EnemyDefeatedEvent.h"
 #include "events/events/PlayerHitEvent.h"
@@ -15,18 +17,19 @@
 
 // state = 3
 
-void GauntletMode::rebuildCollisionDetector(){
-   std::vector<IEnemy*> ptrs;
-   for(auto& e:enemies) ptrs.push_back(e.get());
-   collisionDetector = std::make_unique<CollisionDetector>(eventManager, *player,ptrs);
-}
+// void GauntletMode::rebuildCollisionDetector(){
+//    std::vector<IEnemy*> ptrs;
+//    for(auto& e:enemies) ptrs.push_back(e.get());
+//    collisionDetector = std::make_unique<CollisionDetector>(eventManager, *player,ptrs);
+// }
 
-void GauntletMode::spawnEnemy(){
-   if((int)enemies.size()>=maxEnemies) return;
+void GauntletMode::spawnEnemy(int slotIndex){
+   // if((int)enemies.size()>=maxEnemies) return;
 
    int chasers=0, patrols=0, blockers=0;
 
    for(auto& e:enemies){
+      if(!e) continue;
       switch (e->getType()){
          case EnemyType::CHASER:chasers++; break;
          case EnemyType::BLOCKER:blockers++; break;
@@ -40,33 +43,46 @@ void GauntletMode::spawnEnemy(){
       enemies.push_back(std::make_unique<Chaser>(astarPathfinder, Position(r,c), Direction(DirectionType::UP),*player));
    // else if(patrols<3)
       // enemies.push_back(std::make_unique<Patrol>(astarPathfinder, Position(r,c), Direction(DirectionType::UP)));
-   else if(blockers<3)
+   if(blockers<3)
       enemies.push_back(std::make_unique<Blocker>(Position(r,c), Direction(DirectionType::UP)));
    
-      IEnemy* newEnemy = enemies.back().get();
-      eventManager.subscribe<WallStateChangedEvent>(*newEnemy);
-   rebuildCollisionDetector();
+   if(enemies[slotIndex]){
+      eventManager.subscribe<WallStateChangedEvent>(*enemies[slotIndex]);
+   }
+   // rebuildCollisionDetector();
 }
 
 void GauntletMode::init(){
    int mazeSize = calcMazeSize(currentLevel);
    maze = std::make_unique<Maze>(mazeSize,mazeSize);
    generator.generate(*maze);
-   
-   finished=false;
-   elapsedTime=0.0f;
-   totalsteps=0;
-   stepCounter=0;
-   scorer.resetScore();
-   levelCompleted=false;
 
    player=std::make_unique<Player>(Position(0,0), Direction(DirectionType::RIGHT));
    player->setMaze(maze.get());
    lives = Lives(3,3);
+   
+   finished=false;
+   elapsedTime=0.0f;
+   survivalTime=0;
 
-   spawnTimer = spawnInterval;
+   // totalsteps=0;
+   // stepCounter=0;
+   scorer.resetScore();
+   levelCompleted=false;
 
-   rebuildCollisionDetector();
+   // spawnTimer = spawnInterval;
+
+   enemies.clear();
+   respawnTimers.clear();
+   for(int i=0; i<maxEnemies; i++){
+      enemies.push_back(nullptr);
+      respawnTimers.push_back(0.0f);
+   }
+
+   // rebuildCollisionDetector();
+
+   collisionDetector = std::make_unique<CollisionDetector>(eventManager,*player, enemies);
+
    for(int r=0; r<maze->getRows(); r++){
         for(int c=0; c<maze->getCols(); c++){
             Cell* cell = maze->getCell(r,c);
@@ -82,6 +98,7 @@ void GauntletMode::init(){
    eventManager.subscribe<PlayerHitEvent>(*player);
    eventManager.subscribe<WallStateChangedEvent>(*player);
    eventManager.subscribe<PlayerHitEvent>(*this);
+   eventManager.subscribe<PlayerMovedEvent>(*collisionDetector);
 }
 
 
@@ -101,10 +118,14 @@ void GauntletMode::cleanup(){
    eventManager.unsubcribe<PlayerHitEvent>(*player);
    eventManager.unsubcribe<WallStateChangedEvent>(*player);
    eventManager.unsubcribe<PlayerHitEvent>(*this);
+
+   if(collisionDetector) eventManager.unsubcribe<PlayerMovedEvent>(*collisionDetector);
+
    for(auto& e:enemies){
-      eventManager.unsubcribe<WallStateChangedEvent>(*e);
+      if(e) eventManager.unsubcribe<WallStateChangedEvent>(*e);
    }
    enemies.clear();
+   respawnTimers.clear();
 }
 
 void GauntletMode::onEnter(){ init(); }
@@ -118,27 +139,40 @@ void GauntletMode::onEvent(const PlayerHitEvent& event){
 }
 
 void GauntletMode::update(float deltaTime){
+   if(lives.isGameOver()) return;
    elapsedTime+=deltaTime;
    survivalTime+=deltaTime;
-   spawnTimer+=deltaTime;
 
    if(invincibilityTime>0.0f){
       invincibilityTime-=deltaTime;
    }
    
-   if(spawnTimer>=spawnInterval){
-      spawnTimer=0.0f;
-      spawnEnemy();
-      spawnInterval = std::max(3.0f, spawnInterval-0.5f);
+   for(int i=0; i<maxEnemies; i++){
+      if(!enemies[i]){
+         respawnTimers[i]-=deltaTime;
+         if(respawnTimers[i]<=0.0f) spawnEnemy(i);
+      }
    }
-   
+
    for(auto& e:enemies){
+      if(!e) continue;
+      Position oldPos = e->getPosition();
       e->update(*maze,deltaTime);
+      if(oldPos.distanceTo(e->getPosition())>0.1f && collisionDetector){
+         collisionDetector->checkEnemyMovement(e.get());
+      }
    }
    
-   if(collisionDetector) collisionDetector->checkCollisions();
-   uiManager.drawTime(deltaTime);
-   uiManager.drawLives(lives);
+   // if(collisionDetector) collisionDetector->onEvent();
+   
+   for(int i=0; i<maxEnemies; i++){
+      if(enemies[i] && enemies[i]->getIsDefeated()){
+         eventManager.unsubcribe<WallStateChangedEvent>(*enemies[i]);
+         enemies[i].reset();
+         respawnTimers[i]=3.0f;
+      }
+   }
+
    if(lives.isGameOver()){
       levelCompleted=true;
       ScoreContext ctx;
@@ -153,13 +187,15 @@ void GauntletMode::render(IRenderer& renderer){
    renderer.clearScreen();
    renderer.drawMaze(*maze);
    renderer.drawPlayer(*player);
-
+   uiManager.drawTime(survivalTime);
+   uiManager.drawLives(lives);   
    uiManager.drawHUD(scorer.getScore());
-   for(auto& e:enemies){
-      renderer.drawEnemy(*e);
+
+   if(lives.isGameOver()) {
+      uiManager.drawGameOver(scorer.getScore());
    }
-
-   if(levelCompleted) uiManager.drawGameOver(scorer.getScore());
-
+   for(auto& e:enemies){
+      if(e) renderer.drawEnemy(*e);
+   }
    renderer.endFrame();
 }

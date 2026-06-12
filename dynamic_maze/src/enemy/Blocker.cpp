@@ -45,15 +45,20 @@ void Blocker::update(Maze& maze, float deltaTime){
       if(idleTimer<=0.0f){
          isMoving=true;
          stepsRemaining=3;
+         moveTimer=moveInterval;
       }
-   } else {
-      if(stepsRemaining<=0){
-         isMoving=false;
-         idleTimer=3.0f;
-         return;
-      }
+   }else{
+      moveTimer+=deltaTime;
+      if(moveTimer>=moveTimer){
+         moveTimer=0.0f;
+         position = findCorridorTarget(maze);
+         stepsRemaining--;
 
-      position = findCorridorTarget(maze);
-      stepsRemaining--;
+         if(stepsRemaining<=0){
+            isMoving=false;
+            idleTimer=3.0f;
+         }
+
+      }
    }
 }
