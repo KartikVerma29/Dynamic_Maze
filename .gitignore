@@ -16,3 +16,5 @@ dynamic_maze/.vscode
 .codegraph
 .codegraphy
 dynamic_maze/assets/textures/text.txt
+
+dynamic_maze/src/include/raygui.h
