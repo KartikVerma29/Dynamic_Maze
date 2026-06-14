@@ -31,7 +31,7 @@ void DynamicMazeMode::init(){
         }
     }
     eventManager.subscribe<PlayerMovedEvent>(*player);
-    eventManager.subscribe<PlayerHitEvent>(*player);
+    // eventManager.subscribe<PlayerHitEvent>(*player);
     eventManager.subscribe<WallStateChangedEvent>(*player);
     eventManager.subscribe<PlayerMovedEvent>(*this);
 }
@@ -50,7 +50,7 @@ void DynamicMazeMode::cleanup(){
     }
 
     eventManager.unsubcribe<PlayerMovedEvent>(*player);
-    eventManager.unsubcribe<PlayerHitEvent>(*player);
+    // eventManager.unsubcribe<PlayerHitEvent>(*player);
     eventManager.unsubcribe<WallStateChangedEvent>(*player);
 
     eventManager.unsubcribe<PlayerMovedEvent>(*this);

@@ -1,15 +1,25 @@
 #include "DarkMazeMode.h"
+#include "events/events/PlayerMovedEvent.h"
+#include <cstdlib>
 
 // state = 2
 void DarkMazeMode::init(){
    int mazeSize = calcMazeSize(currentLevel);
    maze = std::make_unique<Maze>(mazeSize, mazeSize);
    generator.generate(*maze);
-   lightRadius = 5.0 * (mazeSize/50.0);
+   lightRadius = 7.0 * (mazeSize/50.0);
 
    player = std::make_unique<Player>(Position(0,0), Direction(DirectionType::RIGHT));
+   player->setMaze(maze.get());
    exitPos.setX(mazeSize-1);
    exitPos.setY(mazeSize-1);
+
+   finished=false;
+   elapsedTime=0.0f;
+   scorer.resetScore();
+   levelCompleted=false;
+   totalsteps=0;
+   stepCounter=0;
 
    optimalPath = checker.getPath(*maze, Position(0,0), exitPos);
 
@@ -25,7 +35,7 @@ void DarkMazeMode::init(){
    }
 
    eventManager.subscribe<PlayerMovedEvent>(*player);
-   eventManager.subscribe<PlayerHitEvent>(*player);
+   // eventManager.subscribe<PlayerHitEvent>(*player);
    eventManager.subscribe<WallStateChangedEvent>(*player);
 }
 
@@ -43,7 +53,7 @@ void DarkMazeMode::cleanup(){
     }
 
     eventManager.unsubcribe<PlayerMovedEvent>(*player);
-    eventManager.unsubcribe<PlayerHitEvent>(*player);
+   //  eventManager.unsubcribe<PlayerHitEvent>(*player);
     eventManager.unsubcribe<WallStateChangedEvent>(*player);
 }
 
@@ -52,8 +62,15 @@ void DarkMazeMode::render(IRenderer& renderer){
    renderer.clearScreen();
    renderer.drawMaze(*maze);
    renderer.drawPlayer(*player);
+
+   uiManager.drawHUD(scorer.getScore());
+
    Position pos = player->getPosition();
    renderer.drawFog(pos, lightRadius);
+   if(levelCompleted){
+      uiManager.drawLevelComplete(scorer.getScore());
+   }
+
    renderer.endFrame();
 }
 
@@ -62,21 +79,12 @@ void DarkMazeMode::onEnter(){ init();}
 void DarkMazeMode::onExit(){ cleanup();}
 
 void DarkMazeMode::update(float deltaTime){
+   if(levelCompleted) return;
    elapsedTime+=deltaTime;
-   stepCounter++;
-   totalsteps++;
-
-   if(isDynamic){
-      if(stepCounter==stepThreshold){
-        stepCounter=0;
-        mutator.mutate(*maze, player->getPosition(), exitPos);
-        stepThreshold = 15+(rand()%10-5);
-    }
-   }
 
    if(player->getPosition()==exitPos){
-      finished=true;
-
+      levelCompleted=true;
+      currentLevel++;
       int visited=0;
       for(int i=0; i<maze->getRows(); i++){
          for(int j=0; j<maze->getCols(); j++){
@@ -92,5 +100,17 @@ void DarkMazeMode::update(float deltaTime){
       ctx.optimalPathLenght=optimalPath.size();
       ctx.mapCoverage = mapCoverage;
       scorer.calculate(ctx);
+   }
+}
+
+void DarkMazeMode::onEvent(const PlayerMovedEvent& event){
+   stepCounter++;
+   totalsteps++;
+   if(isDynamic){
+      if(stepCounter>=stepThreshold){
+         stepCounter=0;
+         mutator.mutate(*maze, player->getPosition(), exitPos);
+         stepThreshold = 10+(rand()%10-5);
+      }
    }
 }

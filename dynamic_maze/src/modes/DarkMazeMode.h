@@ -1,9 +1,11 @@
 #pragma once
 #include "IGameMode.h"
 #include "../maze/solvability/BFSSolvabilityChecker.h"
+#include "../events/IEventListener.h"
+#include "events/events/PlayerMovedEvent.h"
 
 
-class DarkMazeMode: public IGameMode
+class DarkMazeMode: public IGameMode, public IEventListener<PlayerMovedEvent>
 {
 private:
    float lightRadius;
@@ -25,4 +27,5 @@ public:
    void onExit() override;
    void update(float deltaTime) override;
    void render(IRenderer& renderer) override;
+   void onEvent(const PlayerMovedEvent& event) override;
 };

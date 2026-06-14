@@ -1,5 +1,5 @@
 #include "RaylibRenderer.h"
-#include "IRenderer.h"
+#include <raylib.h>
 
 
 RaylibRenderer::RaylibRenderer(int width, int height, const char* title):
@@ -38,7 +38,9 @@ void RaylibRenderer::drawCell(Cell& cell){
 }
 
 void RaylibRenderer::drawMaze(Maze& maze){
-   cellSize = (1.0f*std::min(height, width))/(1.0f*std::max(maze.getCols(), maze.getRows()));
+   mazeCols = maze.getCols();
+   mazeRows = maze.getRows();
+   cellSize = (1.0f*std::min(height, width))/(1.0f*std::max(mazeCols, mazeRows));
 
    DrawLine(0,0,maze.getCols()*cellSize,0,WHITE);
    DrawLine(0,0,0,maze.getRows()*cellSize, WHITE);
@@ -74,47 +76,46 @@ void RaylibRenderer::drawEnemy(IEnemy& ienemy){
    DrawCircle(px,py,enemySize, colr);
 }
 
+void RaylibRenderer::drawFog(Position& position, float radius) {
+    int screenW = GetScreenWidth();
+    int screenH = GetScreenHeight();
 
-/*
- // Fog of war technique based on raylib example
-// Copyright (c) 2018-2025 Ramon Santamaria (@raysan5)
-// Licensed under zlib/libpng license
- 
- */
-
-void RaylibRenderer::drawFog(Position& position, float radius){
-   int tileSize = cellSize;
-   int tilesX = mazeCols;
-   int tilesY = mazeRows;
-
-   if (fogTexture.id == 0 || mazeCols != fogTexture.texture.width) {
+    if (fogTexture.id == 0 || fogTexture.texture.width != screenW) {
         if (fogTexture.id != 0) UnloadRenderTexture(fogTexture);
-        fogTexture = LoadRenderTexture(mazeCols, mazeRows);
-        SetTextureFilter(fogTexture.texture, TEXTURE_FILTER_BILINEAR);
-        SetTextureWrap(fogTexture.texture, TEXTURE_WRAP_CLAMP);
+        fogTexture = LoadRenderTexture(screenW, screenH);
     }
 
+    float px = position.getY() * cellSize + cellSize * 0.5f;
+    float py = position.getX() * cellSize + cellSize * 0.5f;
+    float pixelRadius = radius * cellSize * 1.5f;
 
-   BeginTextureMode(fogTexture);
-      ClearBackground(BLANK);
-      for(int y=0; y<tilesY; y++){
-         for(int x=0; x<tilesX; x++){
-            float dist = Position(x,y).distanceTo(position);
-            if(dist>radius)
-               DrawRectangle(x,y, 1, 1, BLANK);
-            else if(dist>radius*0.6f)
-               DrawRectangle(x,y,1,1,Fade(BLANK,0.6f));
-         }
+    BeginTextureMode(fogTexture);
+        ClearBackground(Color{ 10, 10, 10, 255 }); 
+        DrawCircleGradient(Vector2(px,py), pixelRadius, WHITE, Color{ 10, 10, 10, 255 });
 
-      }
-      EndTextureMode();
+        for(int r = 0; r <= mazeRows; r++){
+            for(int c = 0; c <= mazeCols; c++){
+                float dist = Position(r, c).distanceTo(position); 
+                int rectX = c * (int)cellSize;
+                int rectY = r * (int)cellSize;
+                int size = (int)cellSize;
 
-   DrawTexturePro(
-      fogTexture.texture,
-      {0,0, (float)fogTexture.texture.width, (float)-fogTexture.texture.height},
-      {0,0, (float)tilesX*tileSize, (float)tilesY*tileSize},
-      {0,0,}, 0.0f, WHITE
-   );
+                if(dist > radius) {
+                    DrawRectangle(rectX, rectY, size, size, BLACK);
+                }
+                else if(dist > radius - 1.0f) {
+                    DrawRectangle(rectX, rectY, size, size, Color{0, 0, 0, 150});
+                }
+            }
+        }
+    EndTextureMode();
+
+    BeginBlendMode(BLEND_MULTIPLIED);
+    DrawTextureRec(
+        fogTexture.texture,
+        { 0, 0, (float)fogTexture.texture.width, (float)-fogTexture.texture.height },
+        { 0, 0 },
+        WHITE
+    );
+    EndBlendMode();
 }
-
-
