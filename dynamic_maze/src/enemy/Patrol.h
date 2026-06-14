@@ -1,24 +1,18 @@
 #pragma once
-#include "pathfinding/IPathfinder.h"
+#include "pathfinding/PatrolPathfinder.h"
 #include "IEnemy.h"
 #include "../events/events/PlayerMovedEvent.h"
 
 class Patrol : public IEnemy, public IEventListener<PlayerMovedEvent>
 {
 private:
-   IPathfinder& pathfinder;
+   PatrolPathfinder pathfinder;
    Direction lastPlayerDirection;
 
-   Position diff = Position(
-    cachedPath[pathIndex-1].getX() - position.getX(),
-    cachedPath[pathIndex-1].getY() - position.getY()
-);
-   
+   float moveTimer=0.0f, moveInterval=0.6f ;
+
 public:
-   Patrol(IPathfinder& pathfinder, Position position, Direction direction):
-      IEnemy(position, direction), pathfinder(pathfinder) {
-         lastPlayerDirection=DirectionType::DOWN;
-      }
+   Patrol(std::vector<Position> route, Position position, Direction direction);
 
    EnemyType getType() const override{ return EnemyType::PATROL ;}
    void onEvent(const WallStateChangedEvent &event) override;

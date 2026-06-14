@@ -1,5 +1,10 @@
 #include "Patrol.h"
 
+Patrol::Patrol(std::vector<Position> route, Position position, Direction direction):
+    IEnemy(position, direction), pathfinder(route){
+        lastPlayerDirection = DirectionType::DOWN;
+    }
+
 void Patrol::onEvent(const WallStateChangedEvent& event){
    if(cachedPath.empty()) return;
    if(event.isOpen) return;
@@ -20,34 +25,16 @@ bool Patrol::isDefeatable(const Direction& direction)const{
 void Patrol::update(Maze& maze, float deltaTime) {
     if (isDefeated) return;
 
-    if (cachedPath.empty() || pathIndex >= (int)cachedPath.size()) {
-        Cell* current = maze.getCell(position.getX(), position.getY());
-        if (!current) return;
-
-        std::vector<Position> options;
-        for (auto dir : {DirectionType::UP, DirectionType::DOWN,
-                         DirectionType::LEFT, DirectionType::RIGHT}) {
-            Wall* wall = current->getWall(dir);
-            if (wall && wall->getIsOpen()) {
-                Direction d(dir);
-                Position offset = d.toVector();
-                options.push_back(Position(
-                    position.getX() + offset.getX(),
-                    position.getY() + offset.getY()
-                ));
-            }
+    moveTimer+=deltaTime;
+    if(moveTimer>=moveInterval){
+        moveTimer=0.0f;
+        if(cachedPath.empty() || pathIndex>=cachedPath.size()){
+            cachedPath = pathfinder.findPath(maze, position, position);
+            pathIndex = 0;
         }
-
-        if (options.empty()) return;
-
-        cachedPath.clear();
-        pathIndex = 0;
-        cachedPath.push_back(options[rand() % options.size()]);
+        if(!cachedPath.empty()&& pathIndex<cachedPath.size()){
+            position=cachedPath[pathIndex++];
+        }
     }
-
-    if(!cachedPath.empty() && pathIndex<(int)cachedPath.size()){
-        position = cachedPath[pathIndex];
-        direction = Direction(DirectionType::UP);
-        pathIndex++;
-    }
+    
 }

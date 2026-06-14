@@ -5,6 +5,7 @@
 #include "collision/CollisionDetector.h"
 #include "core/Position.h"
 #include "enemy/IEnemy.h"
+#include "enemy/pathfinding/PatrolPathfinder.h"
 #include "events/events/EnemyDefeatedEvent.h"
 #include "events/events/PlayerHitEvent.h"
 #include "events/events/PlayerMovedEvent.h"
@@ -13,6 +14,7 @@
 #include "events/events/WallStateChangedEvent.h"
 #include "renderer/IRenderer.h"
 #include "scoring/IScoreCalculator.h"
+#include <cstdlib>
 #include <memory>
 
 // state = 3
@@ -41,9 +43,15 @@ void GauntletMode::spawnEnemy(int slotIndex){
 
    if(chasers<1)
       enemies[slotIndex] = std::make_unique<Chaser>(astarPathfinder, Position(r,c), Direction(DirectionType::UP),*player);
-   // else if(patrols<3)
-      // enemies.push_back(std::make_unique<Patrol>(astarPathfinder, Position(r,c), Direction(DirectionType::UP)));
-   if(blockers<3)
+   else if(patrols<3){
+      std::vector<Position> route;
+      route.push_back(Position(r,c));
+      for(int i=0; i<3; i++){
+         route.push_back(Position(rand()%maze->getRows(), rand()%maze->getCols()));
+      }
+      enemies[slotIndex] = std::make_unique<Patrol>(route ,Position(r,c), Direction(DirectionType::UP));
+   }
+   else if(blockers<3)
       enemies[slotIndex]= std::make_unique<Blocker>(Position(r,c), Direction(DirectionType::UP));
    
    if(enemies[slotIndex]){

@@ -3,13 +3,11 @@
 #include "../enemy/IEnemy.h"
 #include "../player/Lives.h"
 #include "../collision/CollisionDetector.h"
-#include "../enemy/pathfinding/PatrolPathfinder.h"
 #include "../enemy/pathfinding/AStarPathfinder.h"
 #include "../events/events/EnemyDefeatedEvent.h"
 #include "../scoring/GauntletScoreCalculator.h"
 #include "events/IEventListener.h"
 #include "events/events/PlayerHitEvent.h"
-#include "events/events/PlayerMovedEvent.h"
 
 class GauntletMode:public IGameMode, public IEventListener<PlayerHitEvent>
 {
@@ -23,7 +21,6 @@ private:
    GauntletScoreCalculator& gauntletScorer;   
 
    std::unique_ptr<CollisionDetector> collisionDetector;
-   // PatrolPathfinder patrolPathfinder;
    AStarPathfinder astarPathfinder;
 
    float invincibilityTime = 0.0f;
