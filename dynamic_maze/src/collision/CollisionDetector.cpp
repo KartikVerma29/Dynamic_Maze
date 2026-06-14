@@ -2,6 +2,7 @@
 #include "../events/events/PlayerHitEvent.h"
 #include "../events/events/EnemyDefeatedEvent.h"
 #include "enemy/IEnemy.h"
+#include "events/events/PlayerMovedEvent.h"
 #include <memory>
 
 const float COLLISION_THREHOLD=0.8f;
@@ -34,8 +35,4 @@ void CollisionDetector::checkEnemyMovement(IEnemy* e){
          eventManager.publish<EnemyDefeatedEvent>({e,e->getPosition()});
       }else eventManager.publish<PlayerHitEvent>({player.getPosition(),e});
    }
-}
-
-void CollisionDetector::onEvent(const PlayerMovedEvent& event){
-   checkCollisions();
 }

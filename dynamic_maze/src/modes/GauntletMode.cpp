@@ -40,11 +40,11 @@ void GauntletMode::spawnEnemy(int slotIndex){
    int c = rand()%maze->getCols();
 
    if(chasers<1)
-      enemies.push_back(std::make_unique<Chaser>(astarPathfinder, Position(r,c), Direction(DirectionType::UP),*player));
+      enemies[slotIndex] = std::make_unique<Chaser>(astarPathfinder, Position(r,c), Direction(DirectionType::UP),*player);
    // else if(patrols<3)
       // enemies.push_back(std::make_unique<Patrol>(astarPathfinder, Position(r,c), Direction(DirectionType::UP)));
    if(blockers<3)
-      enemies.push_back(std::make_unique<Blocker>(Position(r,c), Direction(DirectionType::UP)));
+      enemies[slotIndex]= std::make_unique<Blocker>(Position(r,c), Direction(DirectionType::UP));
    
    if(enemies[slotIndex]){
       eventManager.subscribe<WallStateChangedEvent>(*enemies[slotIndex]);
@@ -98,7 +98,6 @@ void GauntletMode::init(){
    eventManager.subscribe<PlayerHitEvent>(*player);
    eventManager.subscribe<WallStateChangedEvent>(*player);
    eventManager.subscribe<PlayerHitEvent>(*this);
-   eventManager.subscribe<PlayerMovedEvent>(*collisionDetector);
 }
 
 
@@ -119,7 +118,6 @@ void GauntletMode::cleanup(){
    eventManager.unsubcribe<WallStateChangedEvent>(*player);
    eventManager.unsubcribe<PlayerHitEvent>(*this);
 
-   if(collisionDetector) eventManager.unsubcribe<PlayerMovedEvent>(*collisionDetector);
 
    for(auto& e:enemies){
       if(e) eventManager.unsubcribe<WallStateChangedEvent>(*e);
@@ -140,13 +138,13 @@ void GauntletMode::onEvent(const PlayerHitEvent& event){
 
 void GauntletMode::update(float deltaTime){
    if(lives.isGameOver()) return;
-   elapsedTime+=deltaTime;
-   survivalTime+=deltaTime;
-
-   if(invincibilityTime>0.0f){
+      if(invincibilityTime>0.0f){
       invincibilityTime-=deltaTime;
    }
    
+   elapsedTime+=deltaTime;
+   survivalTime+=deltaTime;
+
    for(int i=0; i<maxEnemies; i++){
       if(!enemies[i]){
          respawnTimers[i]-=deltaTime;
@@ -154,16 +152,14 @@ void GauntletMode::update(float deltaTime){
       }
    }
 
+   if(collisionDetector) collisionDetector->checkCollisions();
+
    for(auto& e:enemies){
       if(!e) continue;
-      Position oldPos = e->getPosition();
       e->update(*maze,deltaTime);
-      if(oldPos.distanceTo(e->getPosition())>0.1f && collisionDetector){
-         collisionDetector->checkEnemyMovement(e.get());
-      }
    }
    
-   // if(collisionDetector) collisionDetector->onEvent();
+   if(collisionDetector) collisionDetector->checkCollisions();
    
    for(int i=0; i<maxEnemies; i++){
       if(enemies[i] && enemies[i]->getIsDefeated()){
