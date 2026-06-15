@@ -2,7 +2,6 @@
 #include "../events/events/PlayerHitEvent.h"
 #include "../events/events/EnemyDefeatedEvent.h"
 #include "enemy/IEnemy.h"
-#include "events/events/PlayerMovedEvent.h"
 #include <memory>
 
 const float COLLISION_THREHOLD=0.8f;

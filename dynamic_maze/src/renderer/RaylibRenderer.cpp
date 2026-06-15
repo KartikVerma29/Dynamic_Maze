@@ -77,12 +77,17 @@ void RaylibRenderer::drawEnemy(IEnemy& ienemy){
 }
 
 void RaylibRenderer::drawFog(Position& position, float radius) {
-    int screenW = GetScreenWidth();
+    int screenW = mazeCols*cellSize;
     int screenH = GetScreenHeight();
+    int tilesX = mazeCols;
+    int tilesY = mazeRows;
 
-    if (fogTexture.id == 0 || fogTexture.texture.width != screenW) {
+    if (fogTexture.id == 0 || fogTexture.texture.width != tilesX) {
         if (fogTexture.id != 0) UnloadRenderTexture(fogTexture);
-        fogTexture = LoadRenderTexture(screenW, screenH);
+        fogTexture = LoadRenderTexture(tilesX, tilesY);
+
+        SetTextureFilter(fogTexture.texture, TEXTURE_FILTER_BILINEAR);
+        SetTextureWrap(fogTexture.texture, TEXTURE_WRAP_CLAMP);
     }
 
     float px = position.getY() * cellSize + cellSize * 0.5f;
@@ -90,32 +95,41 @@ void RaylibRenderer::drawFog(Position& position, float radius) {
     float pixelRadius = radius * cellSize * 1.5f;
 
     BeginTextureMode(fogTexture);
-        ClearBackground(Color{ 10, 10, 10, 255 }); 
-        DrawCircleGradient(Vector2(px,py), pixelRadius, WHITE, Color{ 10, 10, 10, 255 });
+        ClearBackground(Color{ 0,0,0,0}); 
+        // DrawCircleGradient(Vector2(px,py), pixelRadius*0.8, WHITE, Color{ 10, 10, 10, 255 });
 
         for(int r = 0; r <= mazeRows; r++){
             for(int c = 0; c <= mazeCols; c++){
                 float dist = Position(r, c).distanceTo(position); 
-                int rectX = c * (int)cellSize;
-                int rectY = r * (int)cellSize;
-                int size = (int)cellSize;
+                // int rectX = c * (int)cellSize;
+                // int rectY = r * (int)cellSize;
+                // int size = (int)cellSize;
 
+                float fadeStart = radius-2.5f;
                 if(dist > radius) {
-                    DrawRectangle(rectX, rectY, size, size, BLACK);
+                    DrawRectangle(c, r, 1, 1, BLACK);
                 }
-                else if(dist > radius - 1.0f) {
-                    DrawRectangle(rectX, rectY, size, size, Color{0, 0, 0, 150});
+                else if(dist > fadeStart) {
+                    float fadeRatio = (dist - fadeStart)/(radius-fadeStart);
+                    unsigned char alpha = (unsigned char)(fadeRatio*255.0f);
+                    DrawRectangle(c, r, 1, 1, Color{0, 0, 0, alpha});
                 }
             }
         }
     EndTextureMode();
 
-    BeginBlendMode(BLEND_MULTIPLIED);
-    DrawTextureRec(
+    BeginBlendMode(BLEND_ALPHA);
+    // DrawTextureRec(
+    //     fogTexture.texture,
+    //     { 0, 0, (float)fogTexture.texture.width, (float)-fogTexture.texture.height },
+    //     { 0, 0 },
+    //     WHITE
+    // );
+    DrawTexturePro(
         fogTexture.texture,
-        { 0, 0, (float)fogTexture.texture.width, (float)-fogTexture.texture.height },
-        { 0, 0 },
-        WHITE
+        {0,0,(float)fogTexture.texture.width, (float)-fogTexture.texture.height},
+        {0,0,(float)tilesX*cellSize, (float)tilesY*cellSize},
+        {0,0} ,0.0f, WHITE
     );
     EndBlendMode();
 }

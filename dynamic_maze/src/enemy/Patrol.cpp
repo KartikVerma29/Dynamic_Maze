@@ -19,7 +19,7 @@ void Patrol::onEvent(const PlayerMovedEvent& event){
 }
 
 bool Patrol::isDefeatable(const Direction& direction)const{
-   return lastPlayerDirection==direction;
+   return this->direction != direction.opposite();
 }
 
 void Patrol::update(Maze& maze, float deltaTime) {

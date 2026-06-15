@@ -27,6 +27,9 @@ protected:
    Position getPosition() const{
       return position;
    };
+   Direction getDirection() const{
+      return direction;
+   }
    bool getIsDefeated() const{
       return isDefeated;
    };

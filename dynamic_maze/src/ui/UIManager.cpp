@@ -5,6 +5,7 @@
 #include "UIManager.h"
 #include <raylib.h>
 #include "../player/Lives.h"
+using namespace std;
 
 UIManager::UIManager(EventManager& eventManager):
    eventManager(eventManager) {}
@@ -68,8 +69,9 @@ void UIManager::drawLevelComplete(int score){
 
    DrawText(ch, sw/2 - MeasureText(ch, 24), sh/3+60, 24, WHITE);
 
-   if(GuiButton({(float)sw/2-80, (float)sh/3+120, 160,40}, "Next Level"))
+   if(GuiButton({(float)sw/2-80, (float)sh/3+120, 160,40}, "Next Level")){
       selectedIndex=20;
+   }
    if(GuiButton({(float)sw/2-80, (float)sh/3+170, 160,40}, "Main Menu"))
       selectedIndex=0;
 

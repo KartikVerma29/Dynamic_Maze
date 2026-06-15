@@ -62,11 +62,12 @@ void DarkMazeMode::render(IRenderer& renderer){
    renderer.clearScreen();
    renderer.drawMaze(*maze);
    renderer.drawPlayer(*player);
+   
+   Position pos = player->getPosition();
+   renderer.drawFog(pos, lightRadius);
 
    uiManager.drawHUD(scorer.getScore());
 
-   Position pos = player->getPosition();
-   renderer.drawFog(pos, lightRadius);
    if(levelCompleted){
       uiManager.drawLevelComplete(scorer.getScore());
    }
@@ -80,6 +81,7 @@ void DarkMazeMode::onExit(){ cleanup();}
 
 void DarkMazeMode::update(float deltaTime){
    if(levelCompleted) return;
+   
    elapsedTime+=deltaTime;
 
    if(player->getPosition()==exitPos){

@@ -9,34 +9,28 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # ─────────────────────────────────────────
-# Compiler
+# Force Compiler (Enforce Clang)
 # ─────────────────────────────────────────
 set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_C_COMPILER clang)
 
 # ─────────────────────────────────────────
-# Build Type
+# Build Type Toggling
 # ─────────────────────────────────────────
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
-    
 endif()
 
-# ─────────────────────────────────────────
-# Compiler Flags
-# ─────────────────────────────────────────
-set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -Wextra -Wpedantic -fsanitize=address -fno-omit-frame-pointer")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
-# CMakeLists.txt — add debug flags
-set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=address -fno-omit-frame-pointer")
-
-# CMakeLists.txt
-set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 
 # ─────────────────────────────────────────
-# Find Raylib (system-wide)
+# FORCE STATIC LINKING PROPERTIES
 # ─────────────────────────────────────────
+# Tells CMake to favor static libraries (.lib/.a) globally
+set(BUILD_SHARED_LIBS OFF)
+
+# Find Raylib (system-wide configuration)
 find_package(raylib REQUIRED)
 
 # ─────────────────────────────────────────
@@ -47,29 +41,29 @@ file(GLOB_RECURSE SOURCES
 )
 
 # ─────────────────────────────────────────
-# Executable
+# Executable Creation
 # ─────────────────────────────────────────
-# make sure ALL .cpp files are listed
 add_executable(dynamic_maze ${SOURCES})
 
-# ─────────────────────────────────────────
-# Include Directories
-# ─────────────────────────────────────────
 target_include_directories(dynamic_maze PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/include
 )
 
 # ─────────────────────────────────────────
-# Link Raylib
+# Link Raylib Statically
 # ─────────────────────────────────────────
-target_link_libraries(dynamic_maze PRIVATE raylib)
+# Force linking to the explicit static target if exposed by your package manager
+if(TARGET raylib::raylib)
+    target_link_libraries(dynamic_maze PRIVATE raylib::raylib)
+else()
+    target_link_libraries(dynamic_maze PRIVATE raylib)
+endif()
 
-# ─────────────────────────────────────────
-# Copy assets to build directory
-# ─────────────────────────────────────────
-add_custom_command(TARGET dynamic_maze POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/assets
-    $<TARGET_FILE_DIR:dynamic_maze>/assets
-)
+# On Windows/Linux, static linking requires standard system dependencies 
+# to be attached explicitly alongside Raylib
+if(WIN32)
+    target_link_libraries(dynamic_maze PRIVATE winmm gdi32 opengl32)
+elseif(UNIX AND NOT APPLE)
+    target_link_libraries(dynamic_maze PRIVATE GL m pthread dl rt X11)
+endif()

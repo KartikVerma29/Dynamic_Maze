@@ -195,11 +195,11 @@ void GauntletMode::render(IRenderer& renderer){
    uiManager.drawLives(lives);   
    uiManager.drawHUD(scorer.getScore());
 
-   if(lives.isGameOver()) {
-      uiManager.drawGameOver(scorer.getScore());
-   }
    for(auto& e:enemies){
       if(e) renderer.drawEnemy(*e);
+   }
+   if(lives.isGameOver()) {
+      uiManager.drawGameOver(scorer.getScore());
    }
    renderer.endFrame();
 }

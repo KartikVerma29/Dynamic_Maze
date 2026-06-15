@@ -25,3 +25,6 @@ maze.srctrldb_tmp
 dynamic_maze/.vscode
 dynamic_maze/.clang-uml
 Design
+
+dynamic_maze/build_debug
+dynamic_maze/build_release
