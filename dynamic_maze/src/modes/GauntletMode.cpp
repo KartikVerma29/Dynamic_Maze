@@ -41,19 +41,27 @@ void GauntletMode::spawnEnemy(int slotIndex){
    int r = rand()%maze->getRows();
    int c = rand()%maze->getCols();
 
-   if(chasers<1)
-      enemies[slotIndex] = std::make_unique<Chaser>(astarPathfinder, Position(r,c), Direction(DirectionType::UP),*player);
-   else if(patrols<3){
-      std::vector<Position> route;
-      route.push_back(Position(r,c));
-      for(int i=0; i<3; i++){
-         route.push_back(Position(rand()%maze->getRows(), rand()%maze->getCols()));
+   int randomEnemy = rand()%2;
+   if(chasers<=currentLevel)
+      enemies[slotIndex] = std::make_unique<Chaser>(astarPathfinder, Position(r,c), Direction(DirectionType::UP),*player); 
+
+   switch(randomEnemy){
+      case 0:{
+         if(patrols<maxEnemies-2){
+            std::vector<Position> route;
+            route.push_back(Position(r,c));
+            for(int i=0; i<3; i++){
+               route.push_back(Position(rand()%maze->getRows(), rand()%maze->getCols()));
+            }
+            enemies[slotIndex] = std::make_unique<Patrol>(route ,Position(r,c), Direction(DirectionType::UP));
+         }
       }
-      enemies[slotIndex] = std::make_unique<Patrol>(route ,Position(r,c), Direction(DirectionType::UP));
+      case 1:{
+         if(blockers<maxEnemies-2)
+            enemies[slotIndex]= std::make_unique<Blocker>(Position(r,c), Direction(DirectionType::UP));
+      }
    }
-   else if(blockers<3)
-      enemies[slotIndex]= std::make_unique<Blocker>(Position(r,c), Direction(DirectionType::UP));
-   
+
    if(enemies[slotIndex]){
       eventManager.subscribe<WallStateChangedEvent>(*enemies[slotIndex]);
    }
@@ -71,7 +79,7 @@ void GauntletMode::init(){
    
    finished=false;
    elapsedTime=0.0f;
-   survivalTime=0;
+   survivalTime=(float)(30.0f)*(1.0f+0.5*currentLevel);
 
    // totalsteps=0;
    // stepCounter=0;
@@ -79,7 +87,7 @@ void GauntletMode::init(){
    levelCompleted=false;
 
    // spawnTimer = spawnInterval;
-
+   maxEnemies = maxEnemies*(currentLevel);
    enemies.clear();
    respawnTimers.clear();
    for(int i=0; i<maxEnemies; i++){
@@ -145,13 +153,12 @@ void GauntletMode::onEvent(const PlayerHitEvent& event){
 }
 
 void GauntletMode::update(float deltaTime){
-   if(lives.isGameOver()) return;
+   if(lives.isGameOver() || levelCompleted) return;
       if(invincibilityTime>0.0f){
       invincibilityTime-=deltaTime;
    }
    
    elapsedTime+=deltaTime;
-   survivalTime+=deltaTime;
 
    for(int i=0; i<maxEnemies; i++){
       if(!enemies[i]){
@@ -178,9 +185,15 @@ void GauntletMode::update(float deltaTime){
    }
 
    if(lives.isGameOver()){
-      levelCompleted=true;
       ScoreContext ctx;
-      ctx.timeTaken = survivalTime;
+      ctx.timeTaken = elapsedTime;
+      gauntletScorer.calculate(ctx);
+   }
+   if(survivalTime<=elapsedTime){
+      levelCompleted=true;
+      currentLevel++;
+      ScoreContext ctx;
+      ctx.timeTaken = elapsedTime;
       gauntletScorer.calculate(ctx);
    }
 
@@ -191,7 +204,7 @@ void GauntletMode::render(IRenderer& renderer){
    renderer.clearScreen();
    renderer.drawMaze(*maze);
    renderer.drawPlayer(*player);
-   uiManager.drawTime(survivalTime);
+   uiManager.drawTime(elapsedTime);
    uiManager.drawLives(lives);   
    uiManager.drawHUD(scorer.getScore());
 
@@ -200,6 +213,9 @@ void GauntletMode::render(IRenderer& renderer){
    }
    if(lives.isGameOver()) {
       uiManager.drawGameOver(scorer.getScore());
+   }
+   if(levelCompleted){
+      uiManager.drawLevelComplete(scorer.getScore());
    }
    renderer.endFrame();
 }

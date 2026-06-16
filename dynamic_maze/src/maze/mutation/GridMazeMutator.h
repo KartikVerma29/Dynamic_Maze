@@ -12,7 +12,7 @@ ISolvabilityChecker& checker;
 EventManager& eventManager;
 int batchSize;
 
-   std::vector<Wall*> selectWalls(Maze& maze, const Position& playerPos);
+   std::vector<std::pair<Wall*, float>> selectWalls(Maze& maze, const Position& playerPos);
    bool tryMutateWall(Maze& maze, Wall* wall, const Position& playerPos, const Position& exitPos);
    void rollbackWall(Wall* wall);
 public:

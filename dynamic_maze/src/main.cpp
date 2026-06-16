@@ -26,7 +26,7 @@ int main(){
    EventManager eventManager;
 
    cout<<"2. Creating Renderer\n"<<flush;
-   RaylibRenderer renderer(1080,720, "Dynamic Maze");
+   RaylibRenderer renderer(1920,1080, "Dynamic Maze");
 
    cout<<"3. Creating UIManager\n"<<flush;
    UIManager uiManager(eventManager);

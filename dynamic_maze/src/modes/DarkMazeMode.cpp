@@ -20,6 +20,7 @@ void DarkMazeMode::init(){
    levelCompleted=false;
    totalsteps=0;
    stepCounter=0;
+   mapCoverage=0;
 
    optimalPath = checker.getPath(*maze, Position(0,0), exitPos);
 
@@ -87,14 +88,14 @@ void DarkMazeMode::update(float deltaTime){
    if(player->getPosition()==exitPos){
       levelCompleted=true;
       currentLevel++;
-      int visited=0;
+      float visited=0;
       for(int i=0; i<maze->getRows(); i++){
          for(int j=0; j<maze->getCols(); j++){
             if(maze->getCell(i,j)->isVisited()) visited++;
          }
       }
 
-      mapCoverage = (float) visited/(maze->getCols()*maze->getRows());
+      mapCoverage = (visited)/((float)maze->getCols()*maze->getRows());
 
       ScoreContext ctx;
       ctx.timeTaken=elapsedTime;

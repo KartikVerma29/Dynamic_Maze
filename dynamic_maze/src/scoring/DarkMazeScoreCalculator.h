@@ -5,7 +5,7 @@ class DarkMazeScoreCalculator: public IScoreCalculator
 {
 private:
    int calcMapCoverage(const ScoreContext& ctx){
-      return ctx.mapCoverage*100;
+      return ctx.mapCoverage*1000;
    }
    int calcPathScore(const ScoreContext& ctx){
       if (ctx.optimalPathLenght==0) return 0;
@@ -18,7 +18,7 @@ private:
    int score=0;
 public:
    int calculate(const ScoreContext &ctx) override{
-      score = calcPathScore(ctx) + calcMapCoverage(ctx)*(ctx.pathLength/ctx.optimalPathLenght) + calcTimePenalty(ctx);
+      score = calcPathScore(ctx) + calcMapCoverage(ctx) + calcTimePenalty(ctx);
       return score;
    }
    int getScore() const override{

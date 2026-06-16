@@ -5,7 +5,7 @@ class DynamicMazeScoreCalculator: public IScoreCalculator
 {
 private:
    int calcTimePenalty(const ScoreContext& ctx){
-      return (int)(ctx.timeTaken*30);
+      return (int)(ctx.timeTaken*10);
    }
    int calcPathScore(const ScoreContext& ctx){
       if(ctx.pathLength==0) return 0;
