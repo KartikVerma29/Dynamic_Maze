@@ -43,7 +43,9 @@ void RaylibRenderer::drawMaze(Maze& maze){
    cellSize = (1.0f*std::min(height, width))/(1.0f*std::max(mazeCols, mazeRows));
 
    DrawLine(0,0,maze.getCols()*cellSize,0,WHITE);
-   DrawLine(0,0,0,maze.getRows()*cellSize, WHITE);
+   DrawLine(0,0,0,maze.getRows()*cellSize, WHITE);  
+   DrawLine(0,maze.getCols()*cellSize,mazeCols*cellSize,maze.getRows()*cellSize, WHITE);  
+   DrawLine(mazeRows*cellSize,0,mazeCols*cellSize,maze.getRows()*cellSize, WHITE);  
 
    for(int r=0; r<maze.getRows(); r++){
       for(int c=0; c<maze.getCols(); c++){

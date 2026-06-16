@@ -27,10 +27,10 @@ void ModeManager::update(float deltaTime){
          case 3: transitionTo(AppStateType::GAUNTLET); break;
          case 4: transitionTo(AppStateType::SETTINGS); break;
          case 10:
+         case 20: 
             currentState->onExit();
             currentState->onEnter();
             break;
-         case 20: transitionTo(AppStateType::DYNAMIC); break;
       }
       return;
    }
