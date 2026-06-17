@@ -7,7 +7,7 @@ std::vector<std::pair<Wall*,float>> GridMazeMutator::selectWalls(Maze& maze, con
    std::vector<std::pair<Wall*,float>> result;
    
    float minThreshold = 2.0f;
-   float maxThreshold = 5.0f;
+   float maxThreshold = 6.0f;
 
    for(const auto& w:maze.getWalls()){
       Wall* wall = w.get();

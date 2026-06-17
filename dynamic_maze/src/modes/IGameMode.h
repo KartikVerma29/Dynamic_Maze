@@ -7,6 +7,10 @@
 #include "../events/EventManager.h"
 #include "../maze/generation/IMazeGenerator.h"
 
+enum class GrowthMode{
+   LINEAR, EXPON, SATRU
+};
+
 class IGameMode: public IAppState{
 protected:
    IMazeMutator& mutator;
@@ -23,10 +27,34 @@ protected:
    int currentLevel=1;
    int stepThreshold=10;
    int levelCompleted;
-   int calcMazeSize(int level){
-      float maxSize = 50.0f;
-      float k=0.5f;
-      return (int)(maxSize*(1-std::exp(-k*level)));
+   int calcMazeSize(int level, GrowthMode mode=GrowthMode::LINEAR){
+      int maxSize = 55.0f;
+      int basSize = 11.0f;
+      int newSize = basSize;
+
+      switch(mode){
+         case GrowthMode::LINEAR:{
+            int growthRate = 4;
+            newSize = basSize + ((currentLevel-1)*growthRate);
+            break;
+         }
+         case GrowthMode::EXPON:{
+            float multiplier = 1.3f;
+            newSize = basSize*std::pow(multiplier,currentLevel-1);
+            break;
+         }
+         case GrowthMode::SATRU:{
+            float k=0.5f;
+            newSize = (maxSize*(1-std::exp(-k*level)));
+            break;
+         }
+      }
+
+      newSize = std::min(newSize, maxSize);
+      if(newSize%2 == 0){
+         newSize+=1;
+      }
+      return newSize;
    }
 
 public:

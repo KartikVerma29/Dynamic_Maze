@@ -5,7 +5,6 @@
 #include "collision/CollisionDetector.h"
 #include "core/Position.h"
 #include "enemy/IEnemy.h"
-#include "enemy/pathfinding/PatrolPathfinder.h"
 #include "events/events/EnemyDefeatedEvent.h"
 #include "events/events/PlayerHitEvent.h"
 #include "events/events/PlayerMovedEvent.h"
@@ -42,7 +41,7 @@ void GauntletMode::spawnEnemy(int slotIndex){
    int c = rand()%maze->getCols();
 
    int randomEnemy = rand()%2;
-   if(chasers<=currentLevel)
+   if(chasers<currentLevel)
       enemies[slotIndex] = std::make_unique<Chaser>(astarPathfinder, Position(r,c), Direction(DirectionType::UP),*player); 
 
    switch(randomEnemy){
