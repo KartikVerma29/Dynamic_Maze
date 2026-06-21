@@ -1,5 +1,6 @@
 #include "RaylibRenderer.h"
 #include <raylib.h>
+#include <raymath.h>
 
 
 RaylibRenderer::RaylibRenderer(int width, int height, const char* title):
@@ -57,10 +58,17 @@ void RaylibRenderer::drawMaze(Maze& maze){
 
 void RaylibRenderer::drawPlayer(Player& player){
    float playerSize = cellSize/2 - 0.1f;
-   Position playerPos = player.getPosition();
-   float px = playerPos.getY() * cellSize + cellSize * 0.5f;  // col → x
-   float py = playerPos.getX() * cellSize + cellSize * 0.5f;  // row → y
-   DrawCircle((int)px, (int)py, playerSize, SKYBLUE);
+   
+   FloatPos playerPos = player.getRenderPosition();
+   Direction dir = player.getDirection();
+
+   float px = playerPos.y * cellSize + cellSize * 0.5f;  // col → x
+   float py = playerPos.x * cellSize + cellSize * 0.5f;  // row → y
+   Vector2 center = {px,py};
+   DrawCircleV(center, cellSize/3, SKYBLUE);
+   
+   Vector2 tip = Vector2Add(center, Vector2Scale({dir.toVector().getX(),dir.toVector().getY()}, cellSize/2.0f));
+   DrawLineEx(center, tip, 3.0f,WHITE);
 }
 
 void RaylibRenderer::drawEnemy(IEnemy& ienemy){
@@ -74,8 +82,16 @@ void RaylibRenderer::drawEnemy(IEnemy& ienemy){
    float enemySize = cellSize/2-0.2f;
    Position enemyPos =ienemy.getPosition();
    float px = enemyPos.getY() * cellSize + cellSize * 0.5f;  // col → x
-   float py = enemyPos.getX() * cellSize + cellSize * 0.5f;  // row → y
+   float py = enemyPos.getX()* cellSize + cellSize * 0.5f;  // row → y
    DrawCircle(px,py,enemySize, colr);
+
+//    Vector2 center = {px,py};
+//    DrawCircleV(center, cellSize/3.0f, colr);
+//    Direction dir = ienemy.getDirection();
+
+//    Vector2 tip = Vector2Add(center, Vector2Scale({dir.toVector().getY(), dir.toVector().getX()},cellSize/2.0f));
+//    DrawLineEx(center,tip,3.0f,BLACK);
+
 }
 
 void RaylibRenderer::drawFog(Position& position, float radius) {

@@ -2,17 +2,17 @@
 #include "../enemy/Chaser.h"
 #include "../enemy/Blocker.h"
 #include "../enemy/Patrol.h"
-#include "collision/CollisionDetector.h"
-#include "core/Position.h"
-#include "enemy/IEnemy.h"
-#include "events/events/EnemyDefeatedEvent.h"
-#include "events/events/PlayerHitEvent.h"
-#include "events/events/PlayerMovedEvent.h"
-#include "events/events/WallAddedEvent.h"
-#include "events/events/WallRemovedEvent.h"
-#include "events/events/WallStateChangedEvent.h"
-#include "renderer/IRenderer.h"
-#include "scoring/IScoreCalculator.h"
+#include "../collision/CollisionDetector.h"
+#include "../core/Position.h"
+#include "../enemy/IEnemy.h"
+#include "../events/events/EnemyDefeatedEvent.h"
+#include "../events/events/PlayerHitEvent.h"
+#include "../events/events/PlayerMovedEvent.h"
+#include "../events/events/WallAddedEvent.h"
+#include "../events/events/WallRemovedEvent.h"
+#include "../events/events/WallStateChangedEvent.h"
+#include "../renderer/IRenderer.h"
+#include "../scoring/IScoreCalculator.h"
 #include <cstdlib>
 #include <memory>
 
@@ -156,7 +156,8 @@ void GauntletMode::update(float deltaTime){
       if(invincibilityTime>0.0f){
       invincibilityTime-=deltaTime;
    }
-   
+   player->updateVisual(deltaTime);
+
    elapsedTime+=deltaTime;
 
    for(int i=0; i<maxEnemies; i++){
@@ -171,6 +172,7 @@ void GauntletMode::update(float deltaTime){
    for(auto& e:enemies){
       if(!e) continue;
       e->update(*maze,deltaTime);
+      // e->updateVisual(deltaTime);
    }
    
    if(collisionDetector) collisionDetector->checkCollisions();

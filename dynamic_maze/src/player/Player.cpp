@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(Position position, Direction direction): position(position), direction(direction){}
+Player::Player(Position position, Direction direction): position(position), direction(direction), visual(position){}
 
 void Player::onEvent(const PlayerHitEvent& event){
 
@@ -16,12 +16,13 @@ void Player::onEvent(const PlayerMovedEvent& event){
 
    Cell* current = maze->getCell(position.getX(), position.getY()); 
    if(!current) return;
+   direction = event.direction;
 
    Wall* wall = current->getWall(event.direction.getType());
    if(wall && wall->getIsOpen()){
       position.setX(newRow);
       position.setY(newCol);
-      direction = event.direction;
+      visual.setTag(position);
    }
 
 }

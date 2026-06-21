@@ -1,5 +1,5 @@
 #include "DynamicMazeMode.h"
-#include "events/events/PlayerMovedEvent.h"
+#include "../events/events/PlayerMovedEvent.h"
 // state = 1
 
 void DynamicMazeMode::init(){
@@ -59,6 +59,7 @@ void DynamicMazeMode::cleanup(){
 void DynamicMazeMode::update(float deltaTime){
     if(levelCompleted) return;
     elapsedTime+=deltaTime;
+    player->updateVisual(deltaTime);
     
     if(player->getPosition() == exitPos){
         levelCompleted=true;

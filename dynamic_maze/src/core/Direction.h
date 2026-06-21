@@ -38,9 +38,21 @@ public:
         case DirectionType::LEFT: return Direction(DirectionType::UP);
      } 
    }
+
    Direction rotateTo(int angle) const;
+
    bool operator==(const Direction& other) const{
       return type == other.type;
+   }
+   
+   float toAngle() const{
+      switch(type){
+         case DirectionType::UP: return 0.0f; 
+         case DirectionType::RIGHT: return 90.0f;
+         case DirectionType::DOWN: return 180.0f;
+         case DirectionType::LEFT: return 270.0f;
+      }
+      return 0.0f;
    }
 
 };

@@ -1,5 +1,5 @@
 #include "DarkMazeMode.h"
-#include "events/events/PlayerMovedEvent.h"
+#include "../events/events/PlayerMovedEvent.h"
 #include <cstdlib>
 
 // state = 2
@@ -83,6 +83,7 @@ void DarkMazeMode::onExit(){ cleanup();}
 void DarkMazeMode::update(float deltaTime){
    if(levelCompleted) return;
    
+   player->updateVisual(deltaTime);
    elapsedTime+=deltaTime;
 
    if(player->getPosition()==exitPos){

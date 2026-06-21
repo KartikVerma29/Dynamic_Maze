@@ -6,6 +6,7 @@
 #include "../core/Position.h"
 #include "../core/Direction.h"
 #include "../maze/Maze.h"
+#include "../core/VisualComponent.h"
 
 
 class Player: public IEventListener<PlayerHitEvent>,
@@ -16,6 +17,7 @@ private:
    Position position;
    Direction direction;
    Maze* maze = nullptr;
+   VisualComponent visual;
 public:
 
    Player(Position position, Direction direction);
@@ -24,6 +26,10 @@ public:
    void onEvent(const WallStateChangedEvent &event) override;
    void onEvent(const PlayerMovedEvent &event) override;
    void setMaze(Maze* m){maze=m;}
+   
+   void updateVisual(float deltaTime) { visual.update(deltaTime); }
+   FloatPos getRenderPosition() const { return visual.getRenderPosition(); }
+
    Position getPosition() const{ return position; }
    Direction getDirection() const{ return direction;}
 };

@@ -6,8 +6,8 @@
 #include "../enemy/pathfinding/AStarPathfinder.h"
 #include "../events/events/EnemyDefeatedEvent.h"
 #include "../scoring/GauntletScoreCalculator.h"
-#include "events/IEventListener.h"
-#include "events/events/PlayerHitEvent.h"
+#include "../events/IEventListener.h"
+#include "../events/events/PlayerHitEvent.h"
 
 class GauntletMode:public IGameMode, public IEventListener<PlayerHitEvent>
 {

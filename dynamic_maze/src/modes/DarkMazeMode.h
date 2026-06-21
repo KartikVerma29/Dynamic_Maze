@@ -2,7 +2,7 @@
 #include "IGameMode.h"
 #include "../maze/solvability/BFSSolvabilityChecker.h"
 #include "../events/IEventListener.h"
-#include "events/events/PlayerMovedEvent.h"
+#include "../events/events/PlayerMovedEvent.h"
 
 
 class DarkMazeMode: public IGameMode, public IEventListener<PlayerMovedEvent>

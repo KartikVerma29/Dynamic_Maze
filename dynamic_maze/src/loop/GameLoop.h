@@ -1,7 +1,7 @@
 #pragma once
 #include "ModeManager.h"
 #include "../player/InputHandler.h"
-#include "ui/UIManager.h"
+#include "../ui/UIManager.h"
 #include <memory>
 class GameLoop{
 private:

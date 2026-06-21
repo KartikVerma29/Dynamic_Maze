@@ -4,11 +4,13 @@
 #include "../events/IEventListener.h"
 #include "../core/Direction.h"
 #include "../core/Position.h"
+#include "../core/VisualComponent.h"
 
 enum class EnemyType{CHASER, PATROL, BLOCKER};
 
 class IEnemy:public IEventListener<WallStateChangedEvent>{
 protected:
+   VisualComponent visual;
    Position position;
    Direction direction;
    std::vector<Position> cachedPath;
@@ -17,8 +19,8 @@ protected:
    
    bool isWallOnPath(const WallStateChangedEvent& event) const;
    
-   public:
-   IEnemy(Position position, Direction direction) : position(position), direction(direction){}
+public:
+   IEnemy(Position position, Direction direction) : position(position), direction(direction), visual(position,1.25){}
    
    virtual void update(Maze& maze, float deltaTime) = 0;
    virtual bool isDefeatable(const Direction& direction) const = 0;
@@ -37,5 +39,8 @@ protected:
       isDefeated=true;
    }
    
+   void updateVisual(float deltaTime) { visual.update(deltaTime); }
+   FloatPos getRenderPosition() const { return visual.getRenderPosition();}
+
    virtual ~IEnemy() = default;
 };
