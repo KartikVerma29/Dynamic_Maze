@@ -32,4 +32,5 @@ public:
 
    Position getPosition() const{ return position; }
    Direction getDirection() const{ return direction;}
+   float getVisualProgress() const {return visual.getProgress();}
 };

@@ -15,4 +15,5 @@ public:
    void setTag(const Position& newTag);
    void update(float deltaTime);
    FloatPos getRenderPosition() const{ return renderPos; }
+   float getProgress() const {return moveProgess;}
 };

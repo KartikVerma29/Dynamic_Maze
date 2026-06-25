@@ -65,9 +65,9 @@ void RaylibRenderer::drawPlayer(Player& player){
    float px = playerPos.y * cellSize + cellSize * 0.5f;  // col → x
    float py = playerPos.x * cellSize + cellSize * 0.5f;  // row → y
    Vector2 center = {px,py};
-   DrawCircleV(center, cellSize/3, SKYBLUE);
+   DrawCircleV(center, cellSize/2, SKYBLUE);
    
-   Vector2 tip = Vector2Add(center, Vector2Scale({dir.toVector().getX(),dir.toVector().getY()}, cellSize/2.0f));
+   Vector2 tip = Vector2Add(center, Vector2Scale({dir.toVector().getY(),dir.toVector().getX()}, cellSize/2.0f));
    DrawLineEx(center, tip, 3.0f,WHITE);
 }
 
