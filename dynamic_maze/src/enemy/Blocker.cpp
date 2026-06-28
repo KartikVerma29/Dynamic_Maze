@@ -53,7 +53,7 @@ void Blocker::update(Maze& maze, float deltaTime){
          moveTimer=0.0f;
          
          if(stepsRemaining>0){
-            position=findCorridorTarget(maze);
+            stepTo(findCorridorTarget(maze));
             stepsRemaining--;
          }else{
             isMoving=false;

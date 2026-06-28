@@ -162,7 +162,7 @@ void GauntletMode::update(float deltaTime){
    for(auto& e:enemies){
       if(!e) continue;
       e->update(*maze,deltaTime);
-      // e->updateVisual(deltaTime);
+      e->updateVisual(deltaTime);
    }
    
    if(collisionDetector) collisionDetector->checkCollisions();

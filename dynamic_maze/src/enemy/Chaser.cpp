@@ -1,7 +1,7 @@
 #include "Chaser.h"
 
 Chaser::Chaser(IPathfinder& pathfinder, Position position, Direction direction, const Player& player): 
-IEnemy(position,direction), pathfinder(pathfinder), player(player) {}
+IEnemy(position,direction,3.0f), pathfinder(pathfinder), player(player) {}
 
 void Chaser::onEvent(const WallStateChangedEvent& event){
    if(cachedPath.empty()) return;
@@ -30,7 +30,7 @@ void Chaser::update(Maze& maze, float deltaTime){
 
          }
       }
-      if(!cachedPath.empty() && pathIndex<cachedPath.size()) position=cachedPath[pathIndex++];
+      if(!cachedPath.empty() && pathIndex<cachedPath.size()) stepTo(cachedPath[pathIndex++]);
    }
 }
 

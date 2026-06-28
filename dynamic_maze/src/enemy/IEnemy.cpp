@@ -19,3 +19,19 @@ bool IEnemy::isWallOnPath(const WallStateChangedEvent& event)const{
 
    return false;
 }
+
+void IEnemy::stepTo(Position nextStep){
+   if(nextStep==position) return ;
+   
+   int dx = nextStep.getX()-position.getX();
+   int dy = nextStep.getY()-position.getY();
+
+   if(dx==-1) direction=Direction(DirectionType::UP);
+   else if (dx == 1) direction = Direction(DirectionType::DOWN);
+   else if (dy == 1) direction = Direction(DirectionType::RIGHT);
+   else if (dy == -1) direction = Direction(DirectionType::LEFT);
+
+   position = nextStep;
+   visual.setTag(position);
+
+}

@@ -54,6 +54,7 @@ void RaylibRenderer::drawMaze(Maze& maze){
          if(cell) drawCell(*cell);
       }
    }
+   
 }
 
 void RaylibRenderer::drawPlayer(Player& player){
@@ -80,17 +81,17 @@ void RaylibRenderer::drawEnemy(IEnemy& ienemy){
    }
 
    float enemySize = cellSize/2-0.2f;
-   Position enemyPos =ienemy.getPosition();
-   float px = enemyPos.getY() * cellSize + cellSize * 0.5f;  // col → x
-   float py = enemyPos.getX()* cellSize + cellSize * 0.5f;  // row → y
+   FloatPos enemyPos =ienemy.getRenderPosition();
+   float px = enemyPos.y* cellSize + cellSize * 0.5f;  // col → x
+   float py = enemyPos.x* cellSize + cellSize * 0.5f;  // row → y
    DrawCircle(px,py,enemySize, colr);
 
-//    Vector2 center = {px,py};
-//    DrawCircleV(center, cellSize/3.0f, colr);
-//    Direction dir = ienemy.getDirection();
+   Vector2 center = {px,py};
+   DrawCircleV(center, cellSize/3.0f, colr);
+   Direction dir = ienemy.getDirection();
 
-//    Vector2 tip = Vector2Add(center, Vector2Scale({dir.toVector().getY(), dir.toVector().getX()},cellSize/2.0f));
-//    DrawLineEx(center,tip,3.0f,BLACK);
+   Vector2 tip = Vector2Add(center, Vector2Scale({dir.toVector().getY(), dir.toVector().getX()},cellSize/2.0f));
+   DrawLineEx(center,tip,3.0f,BLACK);
 
 }
 
@@ -112,7 +113,7 @@ void RaylibRenderer::drawFog(Position& position, float radius) {
     float py = position.getX() * cellSize + cellSize * 0.5f;
     float pixelRadius = radius * cellSize * 1.5f;
 
-    if(position.distanceTo(lastFogPos)>0.05f){
+    if(position.distanceTo(lastFogPos)>0.01f){
         lastFogPos=position;
         
         BeginTextureMode(fogTexture);

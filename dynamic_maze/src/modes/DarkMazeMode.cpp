@@ -64,8 +64,9 @@ void DarkMazeMode::render(IRenderer& renderer){
    renderer.drawMaze(*maze);
    renderer.drawPlayer(*player);
    
-   Position pos = player->getPosition();
-   renderer.drawFog(pos, lightRadius);
+   FloatPos renderPos = player->getRenderPosition();
+   Position smoothPos(renderPos.x, renderPos.y);
+   renderer.drawFog(smoothPos, lightRadius);
 
    uiManager.drawHUD(scorer.getScore());
 

@@ -14,7 +14,7 @@ private:
 
 public:
    
-   Blocker(Position position, Direction direction) : IEnemy(position,direction), idleTimer(3.0f), stepsRemaining(0){}
+   Blocker(Position position, Direction direction) : IEnemy(position,direction,2.5f), idleTimer(3.0f), stepsRemaining(0){}
    EnemyType getType() const override{ return EnemyType::BLOCKER ;}
    void update(Maze &maze, float deltaTime) override;
    void onEvent(const WallStateChangedEvent& event) override;

@@ -1,7 +1,7 @@
 #include "Patrol.h"
 
 Patrol::Patrol(std::vector<Position> route, Position position, Direction direction):
-    IEnemy(position, direction), pathfinder(route){
+    IEnemy(position, direction,2.0f), pathfinder(route){
         lastPlayerDirection = DirectionType::DOWN;
     }
 
@@ -19,7 +19,7 @@ void Patrol::onEvent(const PlayerMovedEvent& event){
 }
 
 bool Patrol::isDefeatable(const Direction& direction)const{
-   return this->direction != direction.opposite();
+   return !(this->direction == direction.opposite());
 }
 
 void Patrol::update(Maze& maze, float deltaTime) {
@@ -33,7 +33,7 @@ void Patrol::update(Maze& maze, float deltaTime) {
             pathIndex = 0;
         }
         if(!cachedPath.empty()&& pathIndex<cachedPath.size()){
-            position=cachedPath[pathIndex++];
+           stepTo(cachedPath[pathIndex++]);
         }
     }
     
