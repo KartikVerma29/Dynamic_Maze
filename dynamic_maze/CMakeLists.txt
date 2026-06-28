@@ -9,10 +9,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # ─────────────────────────────────────────
-# Force Compiler (Enforce Clang)
+# Force Compiler (Only if NOT cross-compiling)
 # ─────────────────────────────────────────
-set(CMAKE_CXX_COMPILER clang++)
-set(CMAKE_C_COMPILER clang)
+if(NOT CMAKE_TOOLCHAIN_FILE)
+    set(CMAKE_CXX_COMPILER clang++)
+    set(CMAKE_C_COMPILER clang)
+endif()
 
 # ─────────────────────────────────────────
 # Build Type Toggling
@@ -24,14 +26,7 @@ endif()
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -Wextra -Wpedantic -fsanitize=address -fno-omit-frame-pointer")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 
-# ─────────────────────────────────────────
-# FORCE STATIC LINKING PROPERTIES
-# ─────────────────────────────────────────
-# Tells CMake to favor static libraries (.lib/.a) globally
 set(BUILD_SHARED_LIBS OFF)
-
-# Find Raylib (system-wide configuration)
-find_package(raylib REQUIRED)
 
 # ─────────────────────────────────────────
 # Collect all source files
@@ -40,30 +35,31 @@ file(GLOB_RECURSE SOURCES
     "${CMAKE_SOURCE_DIR}/src/*.cpp"
 )
 
-# ─────────────────────────────────────────
-# Executable Creation
-# ─────────────────────────────────────────
 add_executable(dynamic_maze ${SOURCES})
 
 target_include_directories(dynamic_maze PRIVATE
     ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/src/include
 )
 
 # ─────────────────────────────────────────
-# Link Raylib Statically
+# PLATFORM-SPECIFIC LINKING
 # ─────────────────────────────────────────
-# Force linking to the explicit static target if exposed by your package manager
-if(TARGET raylib::raylib)
-    target_link_libraries(dynamic_maze PRIVATE raylib::raylib)
-else()
-    target_link_libraries(dynamic_maze PRIVATE raylib)
-endif()
-
-# On Windows/Linux, static linking requires standard system dependencies 
-# to be attached explicitly alongside Raylib
 if(WIN32)
-    target_link_libraries(dynamic_maze PRIVATE winmm gdi32 opengl32)
-elseif(UNIX AND NOT APPLE)
+    # Windows (MinGW) Linking: Point directly to the custom compiled .a file
+    target_link_libraries(dynamic_maze PRIVATE 
+        ${CMAKE_SOURCE_DIR}/src/lib/win/libraylib.a 
+        winmm gdi32 opengl32
+    )
+else()
+    # Linux Native Linking: Use the system package manager
+    find_package(raylib REQUIRED)
+    
+    if(TARGET raylib::raylib)
+        target_link_libraries(dynamic_maze PRIVATE raylib::raylib)
+    else()
+        target_link_libraries(dynamic_maze PRIVATE raylib)
+    endif()
+    
     target_link_libraries(dynamic_maze PRIVATE GL m pthread dl rt X11)
 endif()

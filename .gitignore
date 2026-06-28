@@ -36,3 +36,4 @@ raylib
 dynamic_maze/src/include/libraylib.a
 dynamic_maze/src/include/raylib.h
 dynamic_maze/build-w64
+dynamic_maze/build_w64
