@@ -1,3 +1,4 @@
+#include <iostream>
 #include "maze/generation/RecursiveBacktrackerGenerator.h"
 #include "maze/generation//PrimsGenerator.h"
 #include "maze/mutation/GridMazeMutator.h"
@@ -11,7 +12,6 @@
 #include "scoring/GauntletScoreCalculator.h"
 #include "renderer/RaylibRenderer.h"
 #include "ui/UIManager.h"
-#include <bits/stdc++.h>
 #include "modes/MainMenuMode.h"
 #include "modes/SettingsMode.h"
 #include "loop/GameLoop.h"
@@ -26,7 +26,7 @@ int main(){
    EventManager eventManager;
 
    cout<<"2. Creating Renderer\n"<<flush;
-   RaylibRenderer renderer(1920,1080, "Dynamic Maze");
+   RaylibRenderer renderer(1280,720, "Dynamic Maze");
 
    cout<<"3. Creating UIManager\n"<<flush;
    UIManager uiManager(eventManager);

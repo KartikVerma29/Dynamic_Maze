@@ -1,6 +1,5 @@
 #pragma once
 #include "IEventListener.h"
-#include <pstl/glue_algorithm_defs.h>
 #include <typeindex>
 #include <typeinfo>
 #include <unordered_map>

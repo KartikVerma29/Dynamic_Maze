@@ -1,5 +1,4 @@
 #include "ModeManager.h"
-#include "modes/IAppState.h"
 
 void ModeManager::registerState(AppStateType stateType, IAppState* appState){
    states[stateType] = appState;

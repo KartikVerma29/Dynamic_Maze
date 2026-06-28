@@ -27,6 +27,7 @@ public:
 
    void run();
    void stop(){ isRunning=false;}
+   void step();
    ModeManager& getModeManager(){ return *modeManager;}
 
 };

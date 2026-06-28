@@ -1,0 +1,26 @@
+# Define compiler and flags
+CC = emcc
+CXX = em++
+
+# Source files (using your find command trick!)
+SRC = $(shell find src -type f -name "*.cpp")
+
+# Includes and Libraries path (Update these to point to your Raylib web build)
+INCLUDES = -I./src/include
+LIBS = ./src/lib/libraylib.web.a
+
+# WebAssembly specific flags
+# -Os minimizes size, USE_GLFW=3 is required by Raylib for web
+CXXFLAGS = -Os -Wall -std=c++17 -DPLATFORM_WEB
+LDFLAGS = -s USE_GLFW=3 -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 --shell-file shell.html
+
+# Output file must be .html for Emscripten to generate the full web page
+TARGET = index.html
+
+all: $(TARGET)
+
+$(TARGET): $(SRC)
+	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET) $(INCLUDES) $(LIBS) $(LDFLAGS)
+
+clean:
+	rm -f $(TARGET) index.js index.wasm

@@ -30,3 +30,9 @@ dynamic_maze/build_debug
 dynamic_maze/build_release
 dynamic_maze/asd.txt
 dynamic_maze/full_codebase.txt
+
+idea.txt
+raylib
+dynamic_maze/src/include/libraylib.a
+dynamic_maze/src/include/raylib.h
+dynamic_maze/build-w64
