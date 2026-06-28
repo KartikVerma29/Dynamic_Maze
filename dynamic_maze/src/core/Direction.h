@@ -39,7 +39,15 @@ public:
      } 
    }
 
-   Direction rotateTo(int angle) const;
+   Direction rotateTo(int angle) const {
+    int normalizedAngle = ((angle % 360) + 360) % 360;
+    
+    if (normalizedAngle >= 45 && normalizedAngle < 135) return Direction(DirectionType::RIGHT);
+    if (normalizedAngle >= 135 && normalizedAngle < 225) return Direction(DirectionType::DOWN);
+    if (normalizedAngle >= 225 && normalizedAngle < 315) return Direction(DirectionType::LEFT);
+    
+    return Direction(DirectionType::UP);
+}
 
    bool operator==(const Direction& other) const{
       return type == other.type;

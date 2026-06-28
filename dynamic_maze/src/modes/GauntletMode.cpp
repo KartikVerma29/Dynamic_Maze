@@ -16,16 +16,8 @@
 #include <cstdlib>
 #include <memory>
 
-// state = 3
-
-// void GauntletMode::rebuildCollisionDetector(){
-//    std::vector<IEnemy*> ptrs;
-//    for(auto& e:enemies) ptrs.push_back(e.get());
-//    collisionDetector = std::make_unique<CollisionDetector>(eventManager, *player,ptrs);
-// }
 
 void GauntletMode::spawnEnemy(int slotIndex){
-   // if((int)enemies.size()>=maxEnemies) return;
 
    int chasers=0, patrols=0, blockers=0;
 
@@ -64,7 +56,6 @@ void GauntletMode::spawnEnemy(int slotIndex){
    if(enemies[slotIndex]){
       eventManager.subscribe<WallStateChangedEvent>(*enemies[slotIndex]);
    }
-   // rebuildCollisionDetector();
 }
 
 void GauntletMode::init(){
@@ -94,7 +85,6 @@ void GauntletMode::init(){
       respawnTimers.push_back(0.0f);
    }
 
-   // rebuildCollisionDetector();
 
    collisionDetector = std::make_unique<CollisionDetector>(eventManager,*player, enemies);
 

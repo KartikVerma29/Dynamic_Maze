@@ -57,10 +57,10 @@ void DynamicMazeMode::cleanup(){
 }
 
 void DynamicMazeMode::update(float deltaTime){
-    player->updateVisual(deltaTime);
     if(levelCompleted) {
         return;
     }
+    player->updateVisual(deltaTime);
     elapsedTime+=deltaTime;
     
     if(player->getPosition() == exitPos && player->isVisualComplete()){

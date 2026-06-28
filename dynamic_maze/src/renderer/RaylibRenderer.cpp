@@ -112,18 +112,17 @@ void RaylibRenderer::drawFog(Position& position, float radius) {
     float py = position.getX() * cellSize + cellSize * 0.5f;
     float pixelRadius = radius * cellSize * 1.5f;
 
-    BeginTextureMode(fogTexture);
+    if(position.distanceTo(lastFogPos)>0.05f){
+        lastFogPos=position;
+        
+        BeginTextureMode(fogTexture);
         ClearBackground(Color{ 0,0,0,0}); 
-        // DrawCircleGradient(Vector2(px,py), pixelRadius*0.8, WHITE, Color{ 10, 10, 10, 255 });
-
+        float fadeStart = radius-2.5f;
+        
         for(int r = 0; r <= mazeRows; r++){
             for(int c = 0; c <= mazeCols; c++){
                 float dist = Position(r, c).distanceTo(position); 
-                // int rectX = c * (int)cellSize;
-                // int rectY = r * (int)cellSize;
-                // int size = (int)cellSize;
-
-                float fadeStart = radius-2.5f;
+                
                 if(dist > radius) {
                     DrawRectangle(c, r, 1, 1, BLACK);
                 }
@@ -134,15 +133,10 @@ void RaylibRenderer::drawFog(Position& position, float radius) {
                 }
             }
         }
-    EndTextureMode();
+        EndTextureMode();
+    }
 
     BeginBlendMode(BLEND_ALPHA);
-    // DrawTextureRec(
-    //     fogTexture.texture,
-    //     { 0, 0, (float)fogTexture.texture.width, (float)-fogTexture.texture.height },
-    //     { 0, 0 },
-    //     WHITE
-    // );
     DrawTexturePro(
         fogTexture.texture,
         {0,0,(float)fogTexture.texture.width, (float)-fogTexture.texture.height},

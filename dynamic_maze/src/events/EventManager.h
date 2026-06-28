@@ -28,7 +28,8 @@ public:
    void publish(const T& event){
       auto it=listeners.find(typeid(T));
       if(it!=listeners.end()){
-         for(void* ptr: it->second){
+         std::vector<void*> safeCopy = it->second;
+         for(void* ptr: safeCopy){
             static_cast<IEventListener<T>*>(ptr)->onEvent(event);
          }
       }

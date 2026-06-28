@@ -9,6 +9,7 @@ private:
    const char* title;
    float cellSize;
    RenderTexture2D fogTexture={0};
+   Position lastFogPos = Position(-100.0f, -100.0f);
    int mazeRows, mazeCols;
 public:
    RaylibRenderer(int width, int height, const char* title);

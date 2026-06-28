@@ -12,19 +12,23 @@ void Chaser::onEvent(const WallStateChangedEvent& event){
    }
 }
 
-// void Chaser::onEvent(const PlayerMovedEvent& event){
-//    lastKnownPlayerPos = event.newPosition;
-//    cachedPath.clear();
-// }
-
 void Chaser::update(Maze& maze, float deltaTime){
+
+   if(coolDown>0.0f) coolDown-=deltaTime;
+
    moveTimer+=deltaTime;
 
    if(moveTimer>=moveInterval){
       moveTimer=0.0f;
       if(cachedPath.empty() || pathIndex>=cachedPath.size()){
-         cachedPath = pathfinder.findPath(maze, position, player.getPosition());
-         pathIndex=0;
+         if(coolDown<=0.0f){
+            cachedPath = pathfinder.findPath(maze, position, player.getPosition());
+            pathIndex=0;
+
+            if(cachedPath.empty()) coolDown=0.5f;
+            else if (cachedPath[0]==position) pathIndex=1;
+
+         }
       }
       if(!cachedPath.empty() && pathIndex<cachedPath.size()) position=cachedPath[pathIndex++];
    }

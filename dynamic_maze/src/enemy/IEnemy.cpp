@@ -1,7 +1,8 @@
 #include "IEnemy.h"
 
 bool IEnemy::isWallOnPath(const WallStateChangedEvent& event)const{
-    for(int i=0; i+1<(int)cachedPath.size(); i++){
+   int startIndex = std::max(0, pathIndex-1);
+    for(int i=startIndex; i+1<(int)cachedPath.size(); i++){
       const Position& curr = cachedPath[i];
       const Position& next = cachedPath[i+1];
 
