@@ -32,5 +32,5 @@ public:
 
    Position getPosition() const{ return position; }
    Direction getDirection() const{ return direction;}
-   float getVisualProgress() const {return visual.getProgress();}
+   bool isVisualComplete() const {return visual.getProgress()>=1.0f;}
 };

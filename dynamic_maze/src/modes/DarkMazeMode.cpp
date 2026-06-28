@@ -86,7 +86,7 @@ void DarkMazeMode::update(float deltaTime){
    player->updateVisual(deltaTime);
    elapsedTime+=deltaTime;
 
-   if(player->getPosition()==exitPos){
+   if(player->getPosition()==exitPos && player->isVisualComplete()){
       levelCompleted=true;
       currentLevel++;
       float visited=0;
