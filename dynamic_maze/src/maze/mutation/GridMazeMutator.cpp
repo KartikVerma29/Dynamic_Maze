@@ -6,8 +6,10 @@
 std::vector<std::pair<Wall*,float>> GridMazeMutator::selectWalls(Maze& maze, const Position& playerPos){
    std::vector<std::pair<Wall*,float>> result;
    
-   float minThreshold = 2.0f;
-   float maxThreshold = 6.0f;
+   float scaleFactor = maze.getRows()/15.0f;
+
+   float minThreshold = 1.0f+scaleFactor;
+   float maxThreshold = 3.0f+(scaleFactor*1.5f);
 
    for(const auto& w:maze.getWalls()){
       Wall* wall = w.get();
@@ -52,11 +54,14 @@ void GridMazeMutator::mutate(Maze& maze,const Position& playerPos,const Position
       return a.second > b.second;
    });
 
+   float scaleFactor = maze.getRows()/15.0f;
+   float safezone = 2.0f+scaleFactor;
+
    for(const auto& pair:selected){
       Wall* w = pair.first;
       float dist = pair.second;
 
-      if(!w->getIsOpen() && dist<=3.0f) continue;
+      if(!w->getIsOpen() && dist<=safezone) continue;
 
       bool chanage = tryMutateWall(maze, w, playerPos, exitPos);
    }

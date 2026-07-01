@@ -19,7 +19,7 @@ TARGET = index.html
 
 all: $(TARGET)
 
-$(TARGET): $(SRC)
+$(TARGET): $(SRC) shell.html
 	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET) $(INCLUDES) $(LIBS) $(LDFLAGS)
 
 clean:
