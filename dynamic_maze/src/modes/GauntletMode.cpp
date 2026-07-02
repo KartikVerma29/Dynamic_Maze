@@ -193,15 +193,23 @@ void GauntletMode::update(float deltaTime){
 void GauntletMode::render(IRenderer& renderer){
    renderer.beginFrame();
    renderer.clearScreen();
+
+   renderer.setMazeDimensions(maze->getRows(), maze->getCols());
+
+   renderer.beginWorld();
    renderer.drawMaze(*maze);
    renderer.drawPlayer(*player);
-   uiManager.drawTime(elapsedTime);
-   uiManager.drawLives(lives);   
-   uiManager.drawHUD(scorer.getScore());
 
    for(auto& e:enemies){
       if(e) renderer.drawEnemy(*e);
    }
+
+   renderer.endWorld();
+
+   uiManager.drawTime(elapsedTime);
+   uiManager.drawLives(lives);   
+   uiManager.drawHUD(scorer.getScore());
+
    if(lives.isGameOver()) {
       uiManager.drawGameOver(scorer.getScore());
    }

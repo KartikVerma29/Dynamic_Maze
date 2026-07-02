@@ -61,15 +61,21 @@ void DarkMazeMode::cleanup(){
 void DarkMazeMode::render(IRenderer& renderer){
    renderer.beginFrame();
    renderer.clearScreen();
-   renderer.drawMaze(*maze);
-   renderer.drawPlayer(*player);
-   
+
+   renderer.setMazeDimensions(maze->getRows(), maze->getCols());
+
    FloatPos renderPos = player->getRenderPosition();
    Position smoothPos(renderPos.x, renderPos.y);
-   renderer.drawFog(smoothPos, lightRadius);
+   renderer.updateFog(smoothPos, lightRadius);
+
+   renderer.beginWorld();
+   renderer.drawMaze(*maze);
+   renderer.drawPlayer(*player);
+   renderer.drawFog();
+   
+   renderer.endWorld();
 
    uiManager.drawHUD(scorer.getScore());
-
    if(levelCompleted){
       uiManager.drawLevelComplete(scorer.getScore());
    }

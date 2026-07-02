@@ -38,3 +38,5 @@ dynamic_maze/src/include/raylib.h
 dynamic_maze/build-w64
 dynamic_maze/build_w64
 dynamic_maze/bug.txt
+dynamic_maze/index.wasm
+dynamic_maze/index.js

@@ -12,29 +12,58 @@ RaylibRenderer::RaylibRenderer(int width, int height, const char* title):
 
 RaylibRenderer::~RaylibRenderer() {
     if (fogTexture.id != 0) UnloadRenderTexture(fogTexture);
-    if(mazeTexture.id != 0) UnloadRenderTexture(mazeTexture);
+    if(gameTexture.id != 0) UnloadRenderTexture(gameTexture);
     CloseWindow();
 }
 
 void RaylibRenderer::beginFrame(){ BeginDrawing(); }
-
 void RaylibRenderer::endFrame(){ EndDrawing(); }
-
 void RaylibRenderer::clearScreen(){ ClearBackground(BLACK); }
 
+void RaylibRenderer::beginWorld(){
+
+    float rawScale = (1.0f*std::min(height,width))/(1.0f*std::max(mazeCols,mazeRows));
+    cellSize = std::max(1,(int)std::floor(rawScale));
+
+    int texWidth = mazeCols*cellSize;
+    int texHeight = mazeRows*cellSize;
+
+    if(gameTexture.id==0 || gameTexture.texture.width!=texWidth || gameTexture.texture.height!=texHeight){
+        if(gameTexture.id!=0) UnloadRenderTexture(gameTexture);
+        gameTexture = LoadRenderTexture(texWidth, texHeight);
+        SetTextureFilter(gameTexture.texture, TEXTURE_FILTER_POINT);
+    }
+    BeginTextureMode(gameTexture);
+    ClearBackground(BLACK);
+
+}
+
+void RaylibRenderer::endWorld(){
+    EndTextureMode();
+
+    float offsetX = (width-(gameTexture.texture.width))/2.0f;
+    float offsetY = (height-(gameTexture.texture.height))/2.0f;
+
+    Rectangle source = {0.0f,0.0f, (float)gameTexture.texture.width, (float)-gameTexture.texture.height};
+    Rectangle dest = {offsetX,offsetY, (float)(gameTexture.texture.width), (float)(gameTexture.texture.height)};
+    Vector2 origin = {0.0f,0.0f};
+
+    DrawTexturePro(gameTexture.texture, source, dest, origin, 0.0f, WHITE);
+}
+
 void RaylibRenderer::drawCell(Cell& cell){
-   int px = cell.getCol()*INTERNAL_CELL_SIZE;
-   int py = cell.getRow()*INTERNAL_CELL_SIZE;
+   int px = cell.getCol()*cellSize;
+   int py = cell.getRow()*cellSize;
    int th = WALL_THICKNESS;
 
    Wall* right = cell.getWall(DirectionType::RIGHT);
    if(right && !right->getIsOpen()){
-        DrawRectangle(px+INTERNAL_CELL_SIZE-th, py-th, th, INTERNAL_CELL_SIZE+th, WHITE);
+        DrawRectangle(px+cellSize-th, py-th, th, cellSize+th, WHITE);
    }
 
    Wall* down = cell.getWall(DirectionType::DOWN);
    if(down && !down->getIsOpen()){
-        DrawRectangle(px-th, py+INTERNAL_CELL_SIZE-th, INTERNAL_CELL_SIZE+th, th, WHITE);
+        DrawRectangle(px-th, py+cellSize-th, cellSize+th, th, WHITE);
    }
 
 }
@@ -42,41 +71,27 @@ void RaylibRenderer::drawCell(Cell& cell){
 void RaylibRenderer::drawMaze(Maze& maze){
    mazeCols = maze.getCols();
    mazeRows = maze.getRows();
-   cellSize = (1.0f*std::min(height, width))/(1.0f*std::max(mazeCols, mazeRows));
 
-   int texWidth = mazeCols*INTERNAL_CELL_SIZE;
-   int texHeight = mazeRows*INTERNAL_CELL_SIZE;
+   int texWidth = mazeCols*cellSize;
+   int texHeight = mazeRows*cellSize;
 
-   if(mazeTexture.id==0 || mazeTexture.texture.width!=texWidth || mazeTexture.texture.height!=texHeight){
-        if(mazeTexture.id!=0) UnloadRenderTexture(mazeTexture);
-        mazeTexture = LoadRenderTexture(texWidth, texHeight);
-        SetTextureFilter(mazeTexture.texture, TEXTURE_FILTER_POINT);
-   }
-
-   BeginTextureMode(mazeTexture);
-   ClearBackground(BLACK);
-        for(int r=0; r<maze.getRows(); r++){
-            for(int c=0; c<maze.getCols(); c++){
-                Cell* cell = maze.getCell(r, c);
-                if(cell) drawCell(*cell);
-            }
+    for(int r=0; r<maze.getRows(); r++){
+        for(int c=0; c<maze.getCols(); c++){
+            Cell* cell = maze.getCell(r, c);
+            if(cell) drawCell(*cell);
         }
+    }
 
-        int th = WALL_THICKNESS;
-        DrawRectangle(0, 0, texWidth, th, WHITE);
-        DrawRectangle(0, 0, th, texHeight, WHITE);
-        DrawRectangle(0, texHeight - th, texWidth, th, WHITE);
-        DrawRectangle(texWidth - th, 0, th, texHeight, WHITE);
-    EndTextureMode();
+    int th = WALL_THICKNESS;
+    DrawRectangle(0, 0, texWidth, th, WHITE);
+    DrawRectangle(0, 0, th, texHeight, WHITE);
+    DrawRectangle(0, texHeight - th, texWidth, th, WHITE);
+    DrawRectangle(texWidth - th, 0, th, texHeight, WHITE);
 
-    Rectangle source = { 0.0f, 0.0f, (float)mazeTexture.texture.width, (float)-mazeTexture.texture.height };
-    Rectangle dest = { 0.0f, 0.0f, (float)(mazeCols * cellSize), (float)(mazeRows * cellSize) };
-    Vector2 origin = { 0.0f, 0.0f };
-    DrawTexturePro(mazeTexture.texture, source, dest, origin, 0.0f, WHITE);
 }
 
 void RaylibRenderer::drawPlayer(Player& player){
-   float playerSize = cellSize/2 - 0.1f;
+   float playerSize = cellSize/2.0f - WALL_THICKNESS*2.0f;
    
    FloatPos playerPos = player.getRenderPosition();
    Direction dir = player.getDirection();
@@ -84,7 +99,7 @@ void RaylibRenderer::drawPlayer(Player& player){
    float px = playerPos.y * cellSize + cellSize * 0.5f;  // col → x
    float py = playerPos.x * cellSize + cellSize * 0.5f;  // row → y
    Vector2 center = {px,py};
-   DrawCircleV(center, cellSize/2-WALL_THICKNESS*2, SKYBLUE);
+   DrawCircleV(center, playerSize, SKYBLUE);
    
    Vector2 tip = Vector2Add(center, Vector2Scale({dir.toVector().getY(),dir.toVector().getX()}, cellSize/2.0f));
    DrawLineEx(center, tip, 3.0f,WHITE);
@@ -98,24 +113,23 @@ void RaylibRenderer::drawEnemy(IEnemy& ienemy){
       case EnemyType::PATROL  :{ colr=ORANGE; break;}
    }
 
-   float enemySize = cellSize/2-0.2f-WALL_THICKNESS*2;
+   float enemySize = cellSize/2.0f-0.2f-WALL_THICKNESS*2.0f;
    FloatPos enemyPos =ienemy.getRenderPosition();
+
    float px = enemyPos.y* cellSize + cellSize * 0.5f;  // col → x
    float py = enemyPos.x* cellSize + cellSize * 0.5f;  // row → y
-   DrawCircle(px,py,enemySize, colr);
+   
 
    Vector2 center = {px,py};
-   DrawCircleV(center, cellSize/3.0f, colr);
-   Direction dir = ienemy.getDirection();
+   DrawCircleV(center, enemySize, colr);
 
-   Vector2 tip = Vector2Add(center, Vector2Scale({dir.toVector().getY(), dir.toVector().getX()},cellSize/2.0f));
+   Direction dir = ienemy.getDirection();
+   Vector2 tip = Vector2Add(center, Vector2Scale({dir.toVector().getY(), dir.toVector().getX()},enemySize/2.0f));
    DrawLineEx(center,tip,3.0f,BLACK);
 
 }
 
-void RaylibRenderer::drawFog(Position& position, float radius) {
-    int screenW = mazeCols*cellSize;
-    int screenH = GetScreenHeight();
+void RaylibRenderer::updateFog(Position& position, float radius) {
     int tilesX = mazeCols;
     int tilesY = mazeRows;
 
@@ -126,10 +140,6 @@ void RaylibRenderer::drawFog(Position& position, float radius) {
         SetTextureFilter(fogTexture.texture, TEXTURE_FILTER_BILINEAR);
         SetTextureWrap(fogTexture.texture, TEXTURE_WRAP_CLAMP);
     }
-
-    float px = position.getY() * cellSize + cellSize * 0.5f;
-    float py = position.getX() * cellSize + cellSize * 0.5f;
-    float pixelRadius = radius * cellSize * 1.5f;
 
     if(position.distanceTo(lastFogPos)>0.01f){
         lastFogPos=position;
@@ -154,12 +164,16 @@ void RaylibRenderer::drawFog(Position& position, float radius) {
         }
         EndTextureMode();
     }
+}
+
+void RaylibRenderer::drawFog(){
+    if(fogTexture.id==0) return;
 
     BeginBlendMode(BLEND_ALPHA);
     DrawTexturePro(
         fogTexture.texture,
         {0,0,(float)fogTexture.texture.width, (float)-fogTexture.texture.height},
-        {0,0,(float)tilesX*cellSize, (float)tilesY*cellSize},
+        {0,0,(float)mazeCols*cellSize, (float)mazeRows*cellSize},
         {0,0} ,0.0f, WHITE
     );
     EndBlendMode();

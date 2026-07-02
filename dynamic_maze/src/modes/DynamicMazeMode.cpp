@@ -77,11 +77,15 @@ void DynamicMazeMode::update(float deltaTime){
 void DynamicMazeMode::render(IRenderer& renderer){
     renderer.beginFrame();
     renderer.clearScreen();
+
+    renderer.setMazeDimensions(maze->getRows(), maze->getCols());
+
+    renderer.beginWorld();
     renderer.drawMaze(*maze);
     renderer.drawPlayer(*player);
+    renderer.endWorld();
 
     uiManager.drawHUD(scorer.getScore());
-
     if(levelCompleted){
         uiManager.drawLevelComplete(scorer.getScore());
     } 
