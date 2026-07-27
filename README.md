@@ -3,8 +3,7 @@
 A web-based dynamic maze game built in **C++20 + Raylib**, compiled to **WebAssembly**.
 
 ## Play
-🎮 **[Play in Browser](https://kartikverma29.github.io/Dynamic_Maze/)** ← add your deployment URL
-
+🎮 **[Play in Browser](https://kartikverma29.github.io/Dynamic_Maze/)**
 ---
 
 ## Game Modes
