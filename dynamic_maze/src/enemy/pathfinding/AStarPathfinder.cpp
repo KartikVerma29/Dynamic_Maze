@@ -74,7 +74,7 @@ std::vector<Position> AStarPathfinder::findPath(Maze& maze, Position& from,const
          if(!neighbor) continue;
 
          float newG = gCost[curr.cell]+1.0f;
-         if(gCost.count(neighbor) && gCost[neighbor]<=newG) continue;
+         if(gCost.find(neighbor)!=gCost.end() && gCost[neighbor]<=newG) continue;
 
          gCost[ neighbor] = newG;
          parent[neighbor] = curr.cell;
