@@ -73,7 +73,7 @@ src/
 ├── modes/      — DynamicMaze, DarkMaze, Gauntlet, MainMenu
 ├── loop/       — GameLoop, ModeManager
 ├── renderer/   — IRenderer, RaylibRenderer
-└── ui/         — UIManager (raygui)
+└── ui/         — UIManager
 ```
 
 ---
