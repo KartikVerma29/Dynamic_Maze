@@ -7,7 +7,7 @@
 void InputHandler::update(){
    auto dir = readKeyboard();
    if(dir.has_value()){
-      eventManager.publish(PlayerMovedEvent{dir.value()});
+      eventManager.publish(PlayerMovedEvent{dir.value(), Position()});
    }
 }
 

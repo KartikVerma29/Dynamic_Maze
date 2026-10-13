@@ -6,6 +6,7 @@
 #include "../scoring/IScoreCalculator.h"
 #include "../events/EventManager.h"
 #include "../maze/generation/IMazeGenerator.h"
+#include "../maze/postprocess/IMazePostProcessor.h"
 
 enum class GrowthMode{
    LINEAR, EXPON, SATRU
@@ -19,6 +20,7 @@ protected:
    std::unique_ptr<Player> player; //init
    std::unique_ptr<Maze> maze;     //init
    IMazeGenerator& generator;
+   IMazePostProcessor& postProcessor;
 
    bool finished=false;
    int stepCounter=0; //Common
@@ -58,8 +60,10 @@ protected:
    }
 
 public:
-   IGameMode(IMazeMutator& mutator, IScoreCalculator& scorer, EventManager& eventManager, IMazeGenerator& generator, UIManager& uiManager):
-      mutator(mutator), scorer(scorer), eventManager(eventManager), generator(generator), IAppState(uiManager) {}
+   IGameMode(IMazeMutator& mutator, IScoreCalculator& scorer, EventManager& eventManager, IMazeGenerator& generator, UIManager& uiManager, IMazePostProcessor& postProcessor):
+      IAppState(uiManager), mutator(mutator), scorer(scorer), 
+      eventManager(eventManager), generator(generator), postProcessor(postProcessor)
+      {}
  
    virtual void init()=0;
    virtual void cleanup()=0;

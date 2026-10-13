@@ -41,7 +41,7 @@ std::vector<Position> BFSSolvabilityChecker::getPath(Maze& maze,const Position& 
       
       if(curr==exitCell) return reconstructPath(parent, startCell, exitCell);
 
-      for(auto dir:{DirectionType::UP, DirectionType::RIGHT, DirectionType::DOWN, DirectionType::LEFT}){
+      for(auto dir:ALL_DIRECTIONS){
          Wall* wall = curr->getWall(dir);
          if(wall && wall->getIsOpen()){
             Direction d(dir);

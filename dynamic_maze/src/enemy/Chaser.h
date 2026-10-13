@@ -20,7 +20,7 @@ public:
 
    EnemyType getType() const override{ return EnemyType::CHASER ;}
 
-   bool isDefeatable(const Direction &direction) const override{
+   bool isDefeatable(const Direction&) const override{
       return false;
    };
    

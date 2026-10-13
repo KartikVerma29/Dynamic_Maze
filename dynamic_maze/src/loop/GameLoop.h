@@ -10,8 +10,8 @@ private:
    IRenderer& renderer;
    EventManager& eventManager;
    std::unique_ptr<InputHandler> inputHandler;
-   bool isRunning;
    float targetFPS;
+   bool isRunning;
    
    void processInput();
    void update(float deltaTime);

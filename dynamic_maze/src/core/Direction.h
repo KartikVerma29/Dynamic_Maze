@@ -1,6 +1,11 @@
 #pragma once
 #include "Position.h"
+#include <array>
 enum class DirectionType {UP, DOWN, LEFT, RIGHT};
+
+inline constexpr std::array<DirectionType, 4> ALL_DIRECTIONS = {
+   DirectionType::UP, DirectionType::RIGHT, DirectionType::DOWN, DirectionType::LEFT
+};
 
 class Direction{
    private:

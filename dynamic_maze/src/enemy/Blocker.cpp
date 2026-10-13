@@ -15,7 +15,7 @@ Position Blocker::findCorridorTarget(Maze& maze)const{
    Position best = position;
    int bestscore = 5;
 
-   for(auto dir : {DirectionType::UP, DirectionType::DOWN, DirectionType::LEFT, DirectionType::RIGHT}){
+   for(auto dir :ALL_DIRECTIONS){
       if(!current->hasOpenWall(dir)) continue;
       
       Direction d(dir);
@@ -27,7 +27,7 @@ Position Blocker::findCorridorTarget(Maze& maze)const{
       if(!neighbour) continue;
 
       int openCount=0;
-      for(auto d2 : {DirectionType::UP, DirectionType::DOWN, DirectionType::RIGHT, DirectionType::LEFT}){
+      for(auto d2 : ALL_DIRECTIONS){
          if(!neighbour->hasOpenWall(d2)) openCount++;
       }
 

@@ -12,5 +12,6 @@ public:
       if(count>0) count--;
    };
    bool isGameOver() const{ return count==0 ;}
+   void reset(){count = maxlife;}
    int getCount() const{ return count;}
 };

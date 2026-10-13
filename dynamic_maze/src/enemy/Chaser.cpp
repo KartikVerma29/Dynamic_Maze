@@ -20,17 +20,16 @@ void Chaser::update(Maze& maze, float deltaTime){
 
    if(moveTimer>=moveInterval){
       moveTimer=0.0f;
-      if(cachedPath.empty() || pathIndex>=cachedPath.size()){
+      if(cachedPath.empty() || pathIndex>=(int)cachedPath.size()){
          if(coolDown<=0.0f){
             cachedPath = pathfinder.findPath(maze, position, player.getPosition());
             pathIndex=0;
-
             if(cachedPath.empty()) coolDown=0.5f;
             else if (cachedPath[0]==position) pathIndex=1;
 
          }
       }
-      if(!cachedPath.empty() && pathIndex<cachedPath.size()) stepTo(cachedPath[pathIndex++]);
+      if(pathIndex<(int)cachedPath.size()) stepTo(cachedPath[pathIndex++]);
    }
 }
 

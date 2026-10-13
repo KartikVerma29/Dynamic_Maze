@@ -6,7 +6,6 @@ private:
    bool isMoving=false;
    float idleTimer;
    float moveTimer=0.0f;
-   float moveInterval=0.f;
    int stepsRemaining;
    Position targetPos;
    
@@ -18,5 +17,5 @@ public:
    EnemyType getType() const override{ return EnemyType::BLOCKER ;}
    void update(Maze &maze, float deltaTime) override;
    void onEvent(const WallStateChangedEvent& event) override;
-   bool isDefeatable(const Direction &direction) const override {return isMoving;}
+   bool isDefeatable(const Direction &) const override {return isMoving;}
 };

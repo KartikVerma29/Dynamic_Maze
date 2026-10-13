@@ -20,7 +20,9 @@ protected:
    void stepTo(Position nextStep);
    
 public:
-   IEnemy(Position position, Direction direction, float visualSpeed) : position(position), direction(direction), visual(position,visualSpeed){}
+   IEnemy(Position position, Direction direction, float visualSpeed):
+      visual(position,visualSpeed),
+      position(position), direction(direction){}
    
    virtual void update(Maze& maze, float deltaTime) = 0;
    virtual bool isDefeatable(const Direction& direction) const = 0;

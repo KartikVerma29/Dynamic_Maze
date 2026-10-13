@@ -10,8 +10,8 @@ class CollisionDetector
 private:
    EventManager& eventManager;
    // std::vector<IEnemy*> enemies;
-   const std::vector<std::unique_ptr<IEnemy>>& enemies;
    Player& player;
+   const std::vector<std::unique_ptr<IEnemy>>& enemies;
    
    public:
    CollisionDetector(EventManager& eventManager, Player& player,const std::vector<std::unique_ptr<IEnemy>>& enemies);

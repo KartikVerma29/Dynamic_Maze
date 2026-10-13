@@ -1,7 +1,8 @@
 #include "Patrol.h"
+#include "pathfinding/IPathfinder.h"
 
-Patrol::Patrol(std::vector<Position> route, Position position, Direction direction):
-    IEnemy(position, direction,2.0f), pathfinder(route){
+Patrol::Patrol(std::vector<Position> route,IPathfinder& finder ,Position position, Direction direction):
+    IEnemy(position, direction,2.0f), pathfinder(route,finder){
         lastPlayerDirection = DirectionType::DOWN;
     }
 
@@ -28,11 +29,12 @@ void Patrol::update(Maze& maze, float deltaTime) {
     moveTimer+=deltaTime;
     if(moveTimer>=moveInterval){
         moveTimer=0.0f;
-        if(cachedPath.empty() || pathIndex>=cachedPath.size()){
+        int n = (int)cachedPath.size();
+        if(cachedPath.empty() || pathIndex>=n){
             cachedPath = pathfinder.findPath(maze, position, position);
             pathIndex = 0;
         }
-        if(!cachedPath.empty()&& pathIndex<cachedPath.size()){
+        if(!cachedPath.empty()&& pathIndex<n){
            stepTo(cachedPath[pathIndex++]);
         }
     }

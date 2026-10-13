@@ -16,8 +16,9 @@ private:
    std::vector<Position> optimalPath;
 public:
   
-   DarkMazeMode(UIManager& uiManager ,IMazeMutator& mutator, IScoreCalculator& scorer, EventManager& eventManager, IMazeGenerator& generator, int startLevel=1): 
-               IGameMode(mutator, scorer, eventManager, generator, uiManager) {
+   DarkMazeMode(UIManager& uiManager ,IMazeMutator& mutator, IScoreCalculator& scorer, 
+      EventManager& eventManager, IMazeGenerator& generator, IMazePostProcessor& postProcessor,int startLevel=1): 
+               IGameMode(mutator, scorer, eventManager, generator, uiManager, postProcessor) {
          currentLevel=startLevel;
       }
       

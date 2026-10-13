@@ -1,24 +1,5 @@
-#include <iostream>
-#include "maze/generation/RecursiveBacktrackerGenerator.h"
-#include "maze/generation//PrimsGenerator.h"
-#include "maze/mutation/GridMazeMutator.h"
-#include "maze/solvability/BFSSolvabilityChecker.h"
-#include "modes/DarkMazeMode.h"
-#include "modes/DynamicMazeMode.h"
-#include "modes/GauntletMode.h"
-#include "modes/IAppState.h"
-#include "scoring/DynamicMazeScoreCalculator.h"
-#include "scoring/DarkMazeScoreCalculator.h"
-#include "scoring/GauntletScoreCalculator.h"
-#include "renderer/RaylibRenderer.h"
-#include "ui/UIManager.h"
-#include "modes/MainMenuMode.h"
-#include "modes/SettingsMode.h"
-#include "loop/GameLoop.h"
-
-using namespace std;
-
-#include "events/EventManager.h"
+#include "main.h"
+#include "maze/postprocess/MazeBraider.h"
 
 int main(){
 
@@ -35,6 +16,11 @@ int main(){
    RecursiveBacktrackerGenerator generator;
    PrimsGenerator primGenerator;
 
+   //Maze Post Processoring
+   MazeBraider gaunletBraider(0.75f);
+   MazeBraider darkBraider(0.5f);
+   MazeBraider dynamicBraider(0.25f);
+
    cout<<"5. Creating checker\n"<<flush;
    BFSSolvabilityChecker checker;
 
@@ -47,9 +33,14 @@ int main(){
    GauntletScoreCalculator gauntletScorer;
 
    cout<<"8. Creating modes\n"<<flush;
-   DynamicMazeMode dynamicMode(uiManager, mutator, dynamicScorer, eventManager, generator);
-   DarkMazeMode darkMode(uiManager,mutator, darkScorer, eventManager, generator);
-   GauntletMode gauntletMode(uiManager ,mutator, gauntletScorer, eventManager, primGenerator);
+   DynamicMazeMode dynamicMode(uiManager, mutator, dynamicScorer, eventManager, generator, dynamicBraider);
+   DarkMazeMode darkMode(uiManager,mutator, darkScorer, eventManager, generator, darkBraider);
+
+// GauntletMode
+   Manhattan manhattan;
+   AStarPathfinder finder(manhattan);
+   GauntletMode gauntletMode(uiManager ,mutator, gauntletScorer, eventManager,primGenerator, finder, gaunletBraider);
+
    MainMenuMode mainMenu(uiManager);
    SettingsMode settings(uiManager);
 

@@ -16,12 +16,6 @@ struct ANode{
 
 };
 
-static float heuristic(Cell* a, Cell* b){
-   Position posA(a->getRow(), a->getCol());
-   Position posB(b->getRow(), b->getCol());
-   return posA.distanceTo(posB);
-}
-
 std::vector<Position> AStarPathfinder::findPath(Maze& maze, Position& from,const Position& to){
    std::vector<Position> path;
    std::priority_queue<ANode, std::vector<ANode>, std::greater<ANode>> openSet;
@@ -35,22 +29,14 @@ std::vector<Position> AStarPathfinder::findPath(Maze& maze, Position& from,const
 
    
    gCost[start] = 0.0f;
-   openSet.push({start, 0.0f, heuristic(start, goal) });
 
-   auto delta = [](DirectionType d) ->std::pair<int,int>{
-      switch (d) {
-         case DirectionType::UP  : return {-1,0};
-         case DirectionType::DOWN: return {1,0};
-         case DirectionType::LEFT: return {0,-1};
-         case DirectionType::RIGHT: return {0,1};
-      }
-      return {0,0};
-   };
+   Position goalPos(goal->getRow(), goal->getCol());
+   openSet.push({start, 0.0f, heuristic.estimate(Position(start->getRow(),start->getCol()), goalPos) });
 
 
    while(!openSet.empty()){
       ANode curr = openSet.top(); openSet.pop();
-
+      if(curr.gCost>gCost[curr.cell]) continue;
       if(curr.cell==goal){
          Cell* node = goal;
          while(node!=start){
@@ -63,12 +49,12 @@ std::vector<Position> AStarPathfinder::findPath(Maze& maze, Position& from,const
       }
    
 
-      for( auto dir:{DirectionType::RIGHT, DirectionType::LEFT, DirectionType::DOWN, DirectionType::UP}){
+      for( auto dir:ALL_DIRECTIONS){
          if(!curr.cell->hasOpenWall(dir)) continue;
 
-         auto [dr,dc] = delta(dir);
-         int nr = curr.cell->getRow()+dr;
-         int nc = curr.cell->getCol()+dc;
+         auto offset = Direction(dir).toVector();
+         int nr = curr.cell->getRow()+offset.getX();
+         int nc = curr.cell->getCol()+offset.getY();
 
          Cell* neighbor = maze.getCell(nr,nc);
          if(!neighbor) continue;
@@ -79,7 +65,7 @@ std::vector<Position> AStarPathfinder::findPath(Maze& maze, Position& from,const
          gCost[ neighbor] = newG;
          parent[neighbor] = curr.cell;
 
-         float cost = newG + heuristic(neighbor, goal);
+         float cost = newG + heuristic.estimate(Position(nr,nc), goalPos);
          openSet.push({neighbor, newG, cost});
       }
    }

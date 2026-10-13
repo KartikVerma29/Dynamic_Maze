@@ -7,8 +7,9 @@ void DarkMazeMode::init(){
    int mazeSize = calcMazeSize(currentLevel);
    maze = std::make_unique<Maze>(mazeSize, mazeSize);
    generator.generate(*maze);
-   lightRadius = 7.0 * (mazeSize/50.0);
+   postProcessor.process(*maze);
 
+   lightRadius = 7.0 * (mazeSize/50.0);
    player = std::make_unique<Player>(Position(0,0), Direction(DirectionType::RIGHT));
    player->setMaze(maze.get());
    exitPos.setX(mazeSize-1);

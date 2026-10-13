@@ -6,6 +6,7 @@ void DynamicMazeMode::init(){
     int mazeSize = calcMazeSize(currentLevel);
     maze = std::make_unique<Maze>(mazeSize,mazeSize);
     generator.generate(*maze);
+    postProcessor.process(*maze);
 
     finished=false;
     levelCompleted=false;

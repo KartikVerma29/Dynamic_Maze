@@ -32,36 +32,28 @@ void GauntletMode::spawnEnemy(int slotIndex){
    int r = rand()%maze->getRows();
    int c = rand()%maze->getCols();
 
-   int randomEnemy = rand()%2;
    if(chasers<currentLevel)
       enemies[slotIndex] = std::make_unique<Chaser>(astarPathfinder, Position(r,c), Direction(DirectionType::UP),*player); 
-
-   switch(randomEnemy){
-      case 0:{
-         if(patrols<maxEnemies-2){
-            std::vector<Position> route;
-            route.push_back(Position(r,c));
-            for(int i=0; i<3; i++){
-               route.push_back(Position(rand()%maze->getRows(), rand()%maze->getCols()));
-            }
-            enemies[slotIndex] = std::make_unique<Patrol>(route ,Position(r,c), Direction(DirectionType::UP));
-         }
+   else if(rand()%2==0){
+      if(patrols<maxEnemies-2){
+         std::vector<Position> route{Position(r,c)};
+         for(int i=0; i<3; i++)
+            route.push_back(Position(rand()%maze->getRows(), rand()%maze->getCols()));
+         enemies[slotIndex] = std::make_unique<Patrol>(route, astarPathfinder, Position(r,c), Direction(DirectionType::UP));
       }
-      case 1:{
-         if(blockers<maxEnemies-2)
-            enemies[slotIndex]= std::make_unique<Blocker>(Position(r,c), Direction(DirectionType::UP));
-      }
+   }else if(blockers<maxEnemies-2){
+      enemies[slotIndex]=std::make_unique<Blocker>(Position(r,c), Direction(DirectionType::DOWN));
    }
-
-   if(enemies[slotIndex]){
-      eventManager.subscribe<WallStateChangedEvent>(*enemies[slotIndex]);
-   }
+   
 }
+
+
 
 void GauntletMode::init(){
    int mazeSize = calcMazeSize(currentLevel);
    maze = std::make_unique<Maze>(mazeSize,mazeSize);
    generator.generate(*maze);
+   postProcessor.process(*maze);
 
    player=std::make_unique<Player>(Position(0,0), Direction(DirectionType::RIGHT));
    player->setMaze(maze.get());
@@ -77,7 +69,7 @@ void GauntletMode::init(){
    levelCompleted=false;
 
    // spawnTimer = spawnInterval;
-   maxEnemies = maxEnemies*(currentLevel);
+   maxEnemies = BASE_ENEMIES*currentLevel;
    enemies.clear();
    respawnTimers.clear();
    for(int i=0; i<maxEnemies; i++){
