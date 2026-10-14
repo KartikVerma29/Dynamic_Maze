@@ -19,4 +19,4 @@
 #include "enemy/pathfinding/AStarPathfinder.h"
 #include "enemy/pathfinding/heuristic/ManhattanHeuristic.h"
 #include "events/EventManager.h"
-using namespace std;
+#include "maze/postprocess/MazeBraider.h"

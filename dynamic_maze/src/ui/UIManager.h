@@ -1,6 +1,9 @@
 #pragma once
 #include "../events/EventManager.h"
 #include "../player/Lives.h"
+#include <string>
+
+#include <raylib.h>
 
 class UIManager{
 private:

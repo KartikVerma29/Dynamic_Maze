@@ -9,7 +9,7 @@ class DarkMazeMode: public IGameMode, public IEventListener<PlayerMovedEvent>
 {
 private:
    float lightRadius;
-   bool isDynamic;
+   bool isDynamic=false;
    float mapCoverage;
    Position exitPos;
    BFSSolvabilityChecker checker;

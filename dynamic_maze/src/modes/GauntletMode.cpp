@@ -15,7 +15,7 @@
 #include "../scoring/IScoreCalculator.h"
 #include <cstdlib>
 #include <memory>
-
+ 
 
 void GauntletMode::spawnEnemy(int slotIndex){
 
@@ -44,7 +44,9 @@ void GauntletMode::spawnEnemy(int slotIndex){
    }else if(blockers<maxEnemies-2){
       enemies[slotIndex]=std::make_unique<Blocker>(Position(r,c), Direction(DirectionType::DOWN));
    }
-   
+   if(enemies[slotIndex]){
+      eventManager.subscribe<WallStateChangedEvent>(*enemies[slotIndex]);
+   } 
 }
 
 
@@ -77,19 +79,8 @@ void GauntletMode::init(){
       respawnTimers.push_back(0.0f);
    }
 
-
    collisionDetector = std::make_unique<CollisionDetector>(eventManager,*player, enemies);
 
-   for(int r=0; r<maze->getRows(); r++){
-        for(int c=0; c<maze->getCols(); c++){
-            Cell* cell = maze->getCell(r,c);
-            if(cell){
-                eventManager.subscribe<WallAddedEvent>(*cell);
-                eventManager.subscribe<WallRemovedEvent>(*cell);
-                eventManager.subscribe<WallStateChangedEvent>(*cell);
-            }
-        }
-    }
    eventManager.subscribe<EnemyDefeatedEvent>(gauntletScorer);
    eventManager.subscribe<PlayerMovedEvent>(*player);      
    eventManager.subscribe<PlayerHitEvent>(*player);
@@ -99,25 +90,16 @@ void GauntletMode::init(){
 
 
 void GauntletMode::cleanup(){
-   for(int i=0;i<maze->getRows(); i++){
-      for(int j=0; j<maze->getCols(); j++){
-         Cell* cell = maze->getCell(i, j);
-         if(cell){
-            eventManager.unsubcribe<WallAddedEvent>(*cell);
-            eventManager.unsubcribe<WallRemovedEvent>(*cell);
-            eventManager.unsubcribe<WallStateChangedEvent>(*cell);
-         }
-      }
-   }
-   
-   eventManager.unsubcribe<PlayerMovedEvent>(*player);      
-   eventManager.unsubcribe<PlayerHitEvent>(*player);
-   eventManager.unsubcribe<WallStateChangedEvent>(*player);
-   eventManager.unsubcribe<PlayerHitEvent>(*this);
+
+   eventManager.unsubscribe<EnemyDefeatedEvent>(gauntletScorer);
+   eventManager.unsubscribe<PlayerMovedEvent>(*player);      
+   eventManager.unsubscribe<PlayerHitEvent>(*player);
+   eventManager.unsubscribe<WallStateChangedEvent>(*player);
+   eventManager.unsubscribe<PlayerHitEvent>(*this);
 
 
    for(auto& e:enemies){
-      if(e) eventManager.unsubcribe<WallStateChangedEvent>(*e);
+      if(e) eventManager.unsubscribe<WallStateChangedEvent>(*e);
    }
    enemies.clear();
    respawnTimers.clear();
@@ -161,7 +143,7 @@ void GauntletMode::update(float deltaTime){
    
    for(int i=0; i<maxEnemies; i++){
       if(enemies[i] && enemies[i]->getIsDefeated()){
-         eventManager.unsubcribe<WallStateChangedEvent>(*enemies[i]);
+         eventManager.unsubscribe<WallStateChangedEvent>(*enemies[i]);
          enemies[i].reset();
          respawnTimers[i]=3.0f;
       }

@@ -21,16 +21,6 @@ void DynamicMazeMode::init(){
     player->setMaze(maze.get());
     optimalPath = checker.getPath(*maze, Position(0,0),exitPos);
 
-    for(int r=0; r<maze->getRows(); r++){
-        for(int c=0; c<maze->getCols(); c++){
-            Cell* cell = maze->getCell(r,c);
-            if(cell){
-                eventManager.subscribe<WallAddedEvent>(*cell);
-                eventManager.subscribe<WallRemovedEvent>(*cell);
-                eventManager.subscribe<WallStateChangedEvent>(*cell);
-            }
-        }
-    }
     eventManager.subscribe<PlayerMovedEvent>(*player);
     // eventManager.subscribe<PlayerHitEvent>(*player);
     eventManager.subscribe<WallStateChangedEvent>(*player);
@@ -38,23 +28,12 @@ void DynamicMazeMode::init(){
 }
 
 void DynamicMazeMode::cleanup(){
-    for(int r=0; r<maze->getRows(); r++){
-        for(int c=0; c<maze->getCols(); c++){
-            Cell* cell = maze->getCell(r,c);
-            if(cell){
-                eventManager.unsubcribe<WallAddedEvent>(*cell);
-                eventManager.unsubcribe<WallRemovedEvent>(*cell);
-                eventManager.unsubcribe<WallStateChangedEvent>(*cell);
-            }
-            
-        }
-    }
 
-    eventManager.unsubcribe<PlayerMovedEvent>(*player);
-    // eventManager.unsubcribe<PlayerHitEvent>(*player);
-    eventManager.unsubcribe<WallStateChangedEvent>(*player);
+    eventManager.unsubscribe<PlayerMovedEvent>(*player);
+    // eventManager.unsubscribe<PlayerHitEvent>(*player);
+    eventManager.unsubscribe<WallStateChangedEvent>(*player);
 
-    eventManager.unsubcribe<PlayerMovedEvent>(*this);
+    eventManager.unsubscribe<PlayerMovedEvent>(*this);
 }
 
 void DynamicMazeMode::update(float deltaTime){

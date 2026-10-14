@@ -8,15 +8,12 @@
 
 class Wall;
 
-class Cell: public IEventListener<WallAddedEvent>, 
-            public IEventListener<WallRemovedEvent>, 
-            public IEventListener<WallStateChangedEvent> {
+class Cell{
 private:
    int row, col;
    std::unordered_map<DirectionType, Wall*> walls;
-   bool visited;
+   bool visited, explored=false, active=true;
    DirectionType getDirection(int r, int c) const;
-   bool isRelevant(int r1, int c1, int r2, int c2, int& otherRow, int& otherCol) const;
 public:
 
    Cell():row(0), col(0), visited(false) {}
@@ -31,7 +28,8 @@ public:
    bool isVisited() const;
    void setVisited(bool v);
 
-   void onEvent(const WallAddedEvent& event) override;
-   void onEvent(const WallRemovedEvent& evnt) override;
-   void onEvent(const WallStateChangedEvent& evnt) override;
+   bool isExplored()const {return explored;}
+   void setExplored(bool v){explored=v;}
+   bool isActive()const {return active;}
+   void setActive(bool v){active=v;}
 };

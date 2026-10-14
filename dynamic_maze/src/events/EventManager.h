@@ -17,7 +17,7 @@ public:
    }
 
    template<typename T>
-   void unsubcribe(IEventListener<T>& listener){
+   void unsubscribe(IEventListener<T>& listener){
       auto& vec = listeners[typeid(T)];
       vec.erase(std::remove(vec.begin(), vec.end(), &listener), vec.end());
    }

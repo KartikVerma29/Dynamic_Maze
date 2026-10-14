@@ -22,6 +22,7 @@ void Player::onEvent(const PlayerMovedEvent& event){
    if(wall && wall->getIsOpen()){
       position.setX(newRow);
       position.setY(newCol);
+      if(Cell*next = maze->getCell(newRow, newCol))next->setExplored(true);
       visual.setTag(position);
    }
 

@@ -9,6 +9,8 @@ void DarkMazeMode::init(){
    generator.generate(*maze);
    postProcessor.process(*maze);
 
+   maze->getCell(0, 0)->setExplored(true);
+
    lightRadius = 7.0 * (mazeSize/50.0);
    player = std::make_unique<Player>(Position(0,0), Direction(DirectionType::RIGHT));
    player->setMaze(maze.get());
@@ -25,38 +27,18 @@ void DarkMazeMode::init(){
 
    optimalPath = checker.getPath(*maze, Position(0,0), exitPos);
 
-   for(int r=0; r<maze->getRows(); r++){
-      for(int c=0; c<maze->getCols(); c++){
-         Cell* cell = maze->getCell(r,c);
-         if(cell){
-            eventManager.subscribe<WallAddedEvent>(*cell);
-            eventManager.subscribe<WallRemovedEvent>(*cell);
-            eventManager.subscribe<WallStateChangedEvent>(*cell);
-         }
-      }
-   }
-
    eventManager.subscribe<PlayerMovedEvent>(*player);
    // eventManager.subscribe<PlayerHitEvent>(*player);
    eventManager.subscribe<WallStateChangedEvent>(*player);
+   eventManager.subscribe<PlayerMovedEvent>(*this);
 }
 
 void DarkMazeMode::cleanup(){
-    for(int r=0; r<maze->getRows(); r++){
-        for(int c=0; c<maze->getCols(); c++){
-            Cell* cell = maze->getCell(r,c);
-            if(cell){
-                eventManager.unsubcribe<WallAddedEvent>(*cell);
-                eventManager.unsubcribe<WallRemovedEvent>(*cell);
-                eventManager.unsubcribe<WallStateChangedEvent>(*cell);
-            }
-            
-        }
-    }
-
-    eventManager.unsubcribe<PlayerMovedEvent>(*player);
-   //  eventManager.unsubcribe<PlayerHitEvent>(*player);
-    eventManager.unsubcribe<WallStateChangedEvent>(*player);
+    
+    eventManager.unsubscribe<PlayerMovedEvent>(*this);
+    eventManager.unsubscribe<PlayerMovedEvent>(*player);
+   //  eventManager.unsubscribe<PlayerHitEvent>(*player);
+    eventManager.unsubscribe<WallStateChangedEvent>(*player);
 }
 
 void DarkMazeMode::render(IRenderer& renderer){
@@ -100,7 +82,7 @@ void DarkMazeMode::update(float deltaTime){
       float visited=0;
       for(int i=0; i<maze->getRows(); i++){
          for(int j=0; j<maze->getCols(); j++){
-            if(maze->getCell(i,j)->isVisited()) visited++;
+            if(maze->getCell(i,j)->isExplored()) visited++;
          }
       }
 

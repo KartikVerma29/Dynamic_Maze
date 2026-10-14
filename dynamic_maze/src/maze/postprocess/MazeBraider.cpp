@@ -4,6 +4,7 @@
 #include "../../core/Position.h"
 #include <cstdlib>
 #include <algorithm>
+#include <iostream>
 #include <random>
 
 int MazeBraider::openCount(Cell *cell) const{
@@ -69,6 +70,8 @@ void MazeBraider::process(Maze &maze){
          if(curr && isDeadEnd(curr)) deadEnds.push_back(curr);
       }
    }
+   std::cerr<<"Factor: "<<braidFactor;
+   std::cerr<<"\nDeadEnds before: "<<deadEnds.size();
    std::shuffle(deadEnds.begin(), deadEnds.end(), rng);
 
    std::bernoulli_distribution coin(braidFactor);
@@ -78,4 +81,13 @@ void MazeBraider::process(Maze &maze){
         if(Wall* wall = pickClosedNeighbour(maze, it)) wall->open();
       }
    }
+
+   int cntDeadEnd=0;
+   for(int r=0; r<rows; r++){
+      for(int c=0; c<cols; c++){
+         Cell* curr = maze.getCell(r,c);
+         if(curr && isDeadEnd(curr)) cntDeadEnd++;}
+   }
+   std::cerr<<"\nDeadEnds after: "<<cntDeadEnd;
+
 }

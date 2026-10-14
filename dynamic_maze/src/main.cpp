@@ -1,38 +1,38 @@
 #include "main.h"
-#include "maze/postprocess/MazeBraider.h"
+
 
 int main(){
 
-   cout<<"1. Creating EventManger\n"<<flush;
+   std::cout<<"1. Creating EventManger\n"<<std::flush;
    EventManager eventManager;
 
-   cout<<"2. Creating Renderer\n"<<flush;
+   std::cout<<"2. Creating Renderer\n"<<std::flush;
    RaylibRenderer renderer(1280,720, "Dynamic Maze");
 
-   cout<<"3. Creating UIManager\n"<<flush;
+   std::cout<<"3. Creating UIManager\n"<<std::flush;
    UIManager uiManager(eventManager);
 
-   cout<<"4. Creating generator\n"<<flush;
+   std::cout<<"4. Creating generator\n"<<std::flush;
    RecursiveBacktrackerGenerator generator;
    PrimsGenerator primGenerator;
 
    //Maze Post Processoring
-   MazeBraider gaunletBraider(0.75f);
+   MazeBraider gaunletBraider(0.65f);
    MazeBraider darkBraider(0.5f);
    MazeBraider dynamicBraider(0.25f);
 
-   cout<<"5. Creating checker\n"<<flush;
+   std::cout<<"5. Creating checker\n"<<std::flush;
    BFSSolvabilityChecker checker;
 
-   cout<<"6. Creating mutator\n"<<flush;
+   std::cout<<"6. Creating mutator\n"<<std::flush;
    GridMazeMutator mutator(checker, eventManager);
 
-   cout<<"7. Creating scorers\n"<<flush;
+   std::cout<<"7. Creating scorers\n"<<std::flush;
    DynamicMazeScoreCalculator dynamicScorer;
    DarkMazeScoreCalculator darkScorer;
    GauntletScoreCalculator gauntletScorer;
 
-   cout<<"8. Creating modes\n"<<flush;
+   std::cout<<"8. Creating modes\n"<<std::flush;
    DynamicMazeMode dynamicMode(uiManager, mutator, dynamicScorer, eventManager, generator, dynamicBraider);
    DarkMazeMode darkMode(uiManager,mutator, darkScorer, eventManager, generator, darkBraider);
 
@@ -44,7 +44,7 @@ int main(){
    MainMenuMode mainMenu(uiManager);
    SettingsMode settings(uiManager);
 
-   cout<<"9. Starting gameloop\n"<<flush;
+   std::cout<<"9. Starting gameloop\n"<<std::flush;
    GameLoop gameLoop(renderer, eventManager, uiManager);
    gameLoop.getModeManager().registerState(AppStateType::MAINMENU, &mainMenu);
    gameLoop.getModeManager().registerState(AppStateType::DYNAMIC, &dynamicMode);

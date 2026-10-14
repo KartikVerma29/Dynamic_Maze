@@ -12,6 +12,7 @@
 #include "../events/IEventListener.h"
 #include "../events/events/PlayerHitEvent.h"
 
+
 class GauntletMode:public IGameMode, public IEventListener<PlayerHitEvent>
 {
 private:

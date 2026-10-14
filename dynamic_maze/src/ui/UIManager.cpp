@@ -1,12 +1,6 @@
-
-#include <string>
-#define RAYGUI_IMPLEMENTATION
-#include "../include/raygui.h"
 #include "UIManager.h"
-#include <raylib.h>
-#include "../player/Lives.h"
-using namespace std;
-
+#define RAYGUI_IMPLEMENTATION
+#include <raygui.h>
 UIManager::UIManager(EventManager& eventManager):
    eventManager(eventManager) {}
 
@@ -76,7 +70,6 @@ void UIManager::drawLevelComplete(int score){
       selectedIndex=0;
 
 }
-
 
 void UIManager::drawSettings() {
     int sw = GetScreenWidth();

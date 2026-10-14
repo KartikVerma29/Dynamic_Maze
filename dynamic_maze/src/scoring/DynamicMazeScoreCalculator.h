@@ -14,7 +14,7 @@ private:
    int score=0;
 public:
    int calculate(const ScoreContext &ctx) override{
-      score = calcPathScore(ctx) + calcTimePenalty(ctx);
+      score = std::max(0,calcPathScore(ctx) - calcTimePenalty(ctx));
       return score;
    }
    int getScore() const override{
