@@ -13,7 +13,7 @@ EventManager& eventManager;
 int batchSize;
 
    std::vector<std::pair<Wall*, float>> selectWalls(Maze& maze, const Position& playerPos);
-   bool tryMutateWall(Maze& maze, Wall* wall, const Position& playerPos, const Position& exitPos);
+   void tryMutateWall(Maze& maze, Wall* wall, const Position& playerPos, const Position& exitPos);
    void rollbackWall(Wall* wall);
 public:
 

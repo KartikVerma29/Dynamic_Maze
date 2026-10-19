@@ -17,7 +17,7 @@ void SettingsMode::render(IRenderer& renderer){
    renderer.endFrame();
 }
 
-void SettingsMode::update(float deltaTime){
+void SettingsMode::update(float){
    int index = uiManager.getSelectedIndex();
    if(index == 0) finished=true;
 }

@@ -18,7 +18,7 @@ public:
       score = calcTimeSurvived(ctx)+enemiesDefeated*100;
       return score;
    }
-   void onEvent(const EnemyDefeatedEvent& event) override{
+   void onEvent(const EnemyDefeatedEvent&) override{
       enemiesDefeated++;
    }
    int getScore() const override{

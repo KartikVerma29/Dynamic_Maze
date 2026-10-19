@@ -35,3 +35,45 @@ void IEnemy::stepTo(Position nextStep){
    visual.setTag(position);
 
 }
+
+void IEnemy::onEvent(const WallStateChangedEvent &event){
+   if(cachedPath.empty() || event.isOpen) return;
+   if(isWallOnPath(event)){
+      cachedPath.clear();
+      pathIndex=0;
+   }
+}
+
+bool IEnemy::tryStepNext(Maze &maze){
+   if(pathIndex>=(int)cachedPath.size()) return false;
+   Position nextStep = cachedPath[pathIndex];
+   if(nextStep == position){
+      pathIndex++;
+      if(pathIndex>=(int)cachedPath.size()) return false;
+      nextStep = cachedPath[pathIndex];
+   }
+   int dx = (int)nextStep.getX()-(int)position.getX();
+   int dy = (int)nextStep.getY()-(int)position.getY();
+
+   DirectionType dir;
+   if(dx==-1 && dy==0) dir=ALL_DIRECTIONS[0];
+   else if(dx==1 && dy==0) dir=ALL_DIRECTIONS[2];
+   else if(dx==0 && dy==1) dir=ALL_DIRECTIONS[1];
+   else if(dx==0 && dy==-1) dir=ALL_DIRECTIONS[3];
+   else{
+      cachedPath.clear();
+      pathIndex=0;
+      return false;
+   }
+
+   Cell* curr = maze.getCell((int)position.getX(), (int)position.getY());
+   if(!curr || !curr->hasOpenWall(dir)){
+      cachedPath.clear();
+      pathIndex=0;
+      return false;
+   }
+
+   pathIndex++;
+   stepTo(nextStep);
+   return true;
+}

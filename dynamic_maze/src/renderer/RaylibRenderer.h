@@ -9,10 +9,10 @@ private:
    const char* title;
    int cellSize;
 
-   RenderTexture2D fogTexture={0};
+   RenderTexture2D fogTexture;
    Position lastFogPos = Position(-100.0f, -100.0f);
 
-   RenderTexture2D gameTexture = {0};
+   RenderTexture2D gameTexture;
    const int WALL_THICKNESS = 2;
    int mazeRows, mazeCols;
 

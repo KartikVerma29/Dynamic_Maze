@@ -21,7 +21,7 @@ public:
 
    GameLoop(IRenderer& renderer, EventManager& eventManager, UIManager& uiManager ,float targetFPS=60):
       renderer(renderer), eventManager(eventManager), targetFPS(targetFPS), isRunning(true) {
-         modeManager = std::make_unique<ModeManager>(eventManager, uiManager);
+         modeManager = std::make_unique<ModeManager>(uiManager);
          inputHandler = std::make_unique<InputHandler>(eventManager);
       }
 

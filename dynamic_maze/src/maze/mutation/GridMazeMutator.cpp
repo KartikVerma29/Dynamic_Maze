@@ -25,7 +25,7 @@ std::vector<std::pair<Wall*,float>> GridMazeMutator::selectWalls(Maze& maze, con
    return result;
 }
 
-bool GridMazeMutator::tryMutateWall(Maze& maze, Wall* wall, const Position& playerPos, const Position& exitPos){
+void GridMazeMutator::tryMutateWall(Maze& maze, Wall* wall, const Position& playerPos, const Position& exitPos){
    if(wall->getIsOpen()) wall->close();
    else wall->open();
 
@@ -35,10 +35,9 @@ bool GridMazeMutator::tryMutateWall(Maze& maze, Wall* wall, const Position& play
                cell.first.first, cell.first.second,
                cell.second.first, cell.second.second, wall->getIsOpen()
             });
-      return true;
+      return;
    }
    rollbackWall(wall);
-   return false;
 }
 
 void GridMazeMutator::rollbackWall(Wall* wall){
@@ -61,7 +60,7 @@ void GridMazeMutator::mutate(Maze& maze,const Position& playerPos,const Position
 
       if(!w->getIsOpen() && dist<=safezone) continue;
 
-      bool chanage = tryMutateWall(maze, w, playerPos, exitPos);
+      tryMutateWall(maze, w, playerPos, exitPos);
    }
 
 }

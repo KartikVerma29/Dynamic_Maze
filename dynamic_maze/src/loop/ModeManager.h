@@ -9,10 +9,10 @@ class ModeManager{
 private:
    IAppState* currentState;
    std::map<AppStateType, IAppState*> states;
-   EventManager& eventManager;
+   // EventManager& eventManager;
    UIManager& uiManager;
 public:
-   ModeManager(EventManager& eventManager, UIManager& uiManager): eventManager(eventManager), uiManager(uiManager){
+   ModeManager(UIManager& uiManager):  uiManager(uiManager){
       currentState=nullptr;
    }
 

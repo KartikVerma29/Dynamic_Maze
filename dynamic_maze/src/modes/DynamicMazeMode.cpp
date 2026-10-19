@@ -8,6 +8,8 @@ void DynamicMazeMode::init(){
     generator.generate(*maze);
     postProcessor.process(*maze);
 
+    eventManager.resetStats();
+
     finished=false;
     levelCompleted=false;
     elapsedTime=0.0f;
@@ -25,15 +27,17 @@ void DynamicMazeMode::init(){
     // eventManager.subscribe<PlayerHitEvent>(*player);
     eventManager.subscribe<WallStateChangedEvent>(*player);
     eventManager.subscribe<PlayerMovedEvent>(*this);
+    eventManager.printStats();
 }
 
 void DynamicMazeMode::cleanup(){
-
+    eventManager.resetStats();
     eventManager.unsubscribe<PlayerMovedEvent>(*player);
     // eventManager.unsubscribe<PlayerHitEvent>(*player);
     eventManager.unsubscribe<WallStateChangedEvent>(*player);
 
     eventManager.unsubscribe<PlayerMovedEvent>(*this);
+    eventManager.printStats();
 }
 
 void DynamicMazeMode::update(float deltaTime){
@@ -77,7 +81,7 @@ void DynamicMazeMode::onEnter(){ init(); }
 
 void DynamicMazeMode::onExit(){ cleanup(); }
 
-void DynamicMazeMode::onEvent(const PlayerMovedEvent& event){
+void DynamicMazeMode::onEvent(const PlayerMovedEvent&){
     stepCounter++;
     totalsteps++;
     if(stepCounter>=stepThreshold){

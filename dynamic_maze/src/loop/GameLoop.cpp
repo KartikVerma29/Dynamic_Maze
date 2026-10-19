@@ -47,5 +47,6 @@ void GameLoop::run(){
       while(!WindowShouldClose() && isRunning){
          step();
       }
+      eventManager.printStats();
    #endif
 }

@@ -60,7 +60,7 @@ std::vector<Position> BFSSolvabilityChecker::getPath(Maze& maze,const Position& 
 }
 
 
-std::vector<Position> BFSSolvabilityChecker::reconstructPath(std::unordered_map<Cell*, Cell*>& parent, Cell* start, Cell* exit){
+std::vector<Position> BFSSolvabilityChecker::reconstructPath(std::unordered_map<Cell*, Cell*>& parent, Cell*, Cell* exit){
    std::vector<Position> path;
    Cell* curr = exit;
    while(curr!=NULL){

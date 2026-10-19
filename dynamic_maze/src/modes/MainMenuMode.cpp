@@ -11,7 +11,7 @@ void MainMenuMode::onExit(){
    uiManager.resetSelectedIndex();
 }
 
-void MainMenuMode::update(float deltaTime){
+void MainMenuMode::update(float){
    int index = uiManager.getSelectedIndex();
    switch(index){
       case 1: nextState=AppStateType::DYNAMIC; finished=true; break;

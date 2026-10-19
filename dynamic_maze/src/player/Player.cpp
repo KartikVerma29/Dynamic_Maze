@@ -2,7 +2,7 @@
 
 Player::Player(Position position, Direction direction): position(position), direction(direction), visual(position){}
 
-void Player::onEvent(const PlayerHitEvent& event){
+void Player::onEvent(const PlayerHitEvent&){
 
 }
 

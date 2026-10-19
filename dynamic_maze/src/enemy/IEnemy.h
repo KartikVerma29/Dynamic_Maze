@@ -16,9 +16,13 @@ protected:
    std::vector<Position> cachedPath;
    int pathIndex=0;
    bool isDefeated=false;
+   float replanCooldown=0.0f;
+   bool pathInvalidated=false;
+   Position cachedTarget;
+
    bool isWallOnPath(const WallStateChangedEvent& event) const;
    void stepTo(Position nextStep);
-   
+   bool tryStepNext(Maze& maze);
 public:
    IEnemy(Position position, Direction direction, float visualSpeed):
       visual(position,visualSpeed),
@@ -26,7 +30,7 @@ public:
    
    virtual void update(Maze& maze, float deltaTime) = 0;
    virtual bool isDefeatable(const Direction& direction) const = 0;
-   virtual void onEvent(const WallStateChangedEvent &event) = 0;
+   void onEvent(const WallStateChangedEvent &event) override;
    virtual EnemyType getType()const =0;
    Position getPosition() const{
       return position;

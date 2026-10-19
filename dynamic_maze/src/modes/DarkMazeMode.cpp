@@ -97,7 +97,7 @@ void DarkMazeMode::update(float deltaTime){
    }
 }
 
-void DarkMazeMode::onEvent(const PlayerMovedEvent& event){
+void DarkMazeMode::onEvent(const PlayerMovedEvent&){
    stepCounter++;
    totalsteps++;
    if(isDynamic){

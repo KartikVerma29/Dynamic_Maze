@@ -108,7 +108,7 @@ void GauntletMode::cleanup(){
 void GauntletMode::onEnter(){ init(); }
 void GauntletMode::onExit() { cleanup(); }
 
-void GauntletMode::onEvent(const PlayerHitEvent& event){
+void GauntletMode::onEvent(const PlayerHitEvent&){
    if(invincibilityTime<=0.0f){
       lives.decrement();
       invincibilityTime=2.0f;
