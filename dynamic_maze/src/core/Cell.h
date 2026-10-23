@@ -5,6 +5,8 @@
 #include "../events/events/WallAddedEvent.h"
 #include "../events/events/WallStateChangedEvent.h"
 #include "../events/events/WallRemovedEvent.h"
+#include "Direction.h"
+#include "Wall.h"
 
 class Wall;
 

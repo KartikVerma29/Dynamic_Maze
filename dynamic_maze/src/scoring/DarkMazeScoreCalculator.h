@@ -5,20 +5,21 @@ class DarkMazeScoreCalculator: public IScoreCalculator
 {
 private:
    int calcMapCoverage(const ScoreContext& ctx){
-      return ctx.mapCoverage*1000;
+      return (int)(ctx.mapCoverage*3000.0f);
    }
-   int calcPathScore(const ScoreContext& ctx){
-      if (ctx.optimalPathLenght==0) return 0;
-      if(ctx.pathLength==0) return 0;
-      return ((float)ctx.optimalPathLenght/ctx.pathLength)*100;
-   }
+
    int calcTimePenalty(const ScoreContext& ctx){
-      return 1000/ctx.timeTaken;
+      if(ctx.optimalPathLenght==0) return 0;
+      float secondsPerOptimalStep = ctx.timeTaken / (float)ctx.optimalPathLenght;
+      return (int)(secondsPerOptimalStep * 150.0f);
    }
    int score=0;
 public:
    int calculate(const ScoreContext &ctx) override{
-      score = calcPathScore(ctx) + calcMapCoverage(ctx) + calcTimePenalty(ctx);
+      int coverage = calcMapCoverage(ctx);
+      int tPenalty = calcTimePenalty(ctx);
+      int base = 500;
+      score = std::max(0, base+coverage-tPenalty);
       return score;
    }
    int getScore() const override{

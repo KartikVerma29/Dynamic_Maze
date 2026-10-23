@@ -53,6 +53,7 @@ void DarkMazeMode::render(IRenderer& renderer){
 
    renderer.beginWorld();
    renderer.drawMaze(*maze);
+   renderer.drawExit(exitPos);
    renderer.drawPlayer(*player);
    renderer.drawFog();
    

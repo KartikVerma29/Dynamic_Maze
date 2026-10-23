@@ -1,13 +1,11 @@
 #include "RaylibRenderer.h"
-#include <raylib.h>
-#include <raymath.h>
 
 
-RaylibRenderer::RaylibRenderer(int width, int height, const char* title):
-   width(width), height(height), title(title){
+RaylibRenderer::RaylibRenderer(int width, int height, const char* title, int fps):
+   width(width), height(height){
       InitWindow(width,height,title);
-      SetTargetFPS(60);
-      
+      SetTargetFPS(fps);
+    
 }
 
 RaylibRenderer::~RaylibRenderer() {
@@ -87,7 +85,6 @@ void RaylibRenderer::drawMaze(Maze& maze){
     DrawRectangle(0, 0, th, texHeight, WHITE);
     DrawRectangle(0, texHeight - th, texWidth, th, WHITE);
     DrawRectangle(texWidth - th, 0, th, texHeight, WHITE);
-
 }
 
 void RaylibRenderer::drawPlayer(Player& player){
@@ -167,6 +164,7 @@ void RaylibRenderer::updateFog(Position& position, float radius) {
 }
 
 void RaylibRenderer::drawFog(){
+    PROFILE_SCOPE;
     if(fogTexture.id==0) return;
 
     BeginBlendMode(BLEND_ALPHA);
@@ -177,4 +175,71 @@ void RaylibRenderer::drawFog(){
         {0,0} ,0.0f, WHITE
     );
     EndBlendMode();
+}
+
+void RaylibRenderer::onEvent(const WallTelegraphEvent &event){
+    activeTelegraphs.push_back({
+        event.r1, event.c1, event.r2, event.c2,
+        event.willOpen, event.delay, event.delay
+    });
+}
+
+void RaylibRenderer::update(float deltaTime){
+    for(auto& it:activeTelegraphs){
+        it.timeLeft-=deltaTime;
+    }
+    std::erase_if(activeTelegraphs, [](const auto& t) { return t.timeLeft <= 0.0f; });
+}
+
+void RaylibRenderer::drawTelegraphs() {
+    for (const auto& t : activeTelegraphs) {
+        float progress = 1.0f - (t.timeLeft / t.totalDelay);
+        progress = std::clamp(progress, 0.0f, 1.0f);
+        int r1 = t.r1, c1 = t.c1;
+        int r2 = t.r2, c2 = t.c2;
+        if (r1 > r2 || (r1 == r2 && c1 > c2)) {
+            std::swap(r1, r2);
+            std::swap(c1, c2);
+        }
+
+        Vector2 start, end;
+        if (r1 == r2) {
+            float x = (c1 + 1) * cellSize;
+            start = { x, (float)r1 * cellSize };
+            end   = { x, (float)(r1 + 1) * cellSize };
+        } else {
+            float y = (r1 + 1) * cellSize;
+            start = { (float)c1 * cellSize, y };
+            end   = { (float)(c1 + 1) * cellSize, y };
+        }
+        Color telegraphColor;
+        float thickness = 4.0f;
+
+        if (t.willOpen) {
+            unsigned char alpha = (unsigned char)(255.0f * (1.0f - progress));
+            telegraphColor = { 157, 255, 0, alpha };
+        } else {
+            unsigned char alpha = (unsigned char)(255.0f * progress);
+            telegraphColor = { 255, 100, 100, alpha };
+        }
+
+        DrawLineEx(start, end, thickness, telegraphColor);
+    }
+}
+
+void RaylibRenderer::drawExit(const Position& exitPos){
+    float px=exitPos.getY()*cellSize;
+    float py=exitPos.getX()*cellSize;
+    
+    float pulse = (std::sin(GetTime()*5.0f)+1.0f)*0.5f;
+    unsigned char alpha = (unsigned char)(100+155*pulse);
+    Color color = {50,255,50, alpha};
+
+    Rectangle rect={
+        px+WALL_THICKNESS+2.0f,
+        py+WALL_THICKNESS+2.0f,
+        (float)cellSize-WALL_THICKNESS*2-4.0f,
+        (float)cellSize-WALL_THICKNESS*2-4.0f
+    };
+    DrawRectangleRounded(rect, 0.3f, 4, color);
 }

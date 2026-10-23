@@ -2,6 +2,10 @@
 #include "IPathfinder.h"
 #include <vector>
 #include "heuristic/IHeuristic.h"
+#include <algorithm>
+#include <functional>
+#include <queue>
+#include <unordered_map>
 
 class AStarPathfinder: public IPathfinder
 {

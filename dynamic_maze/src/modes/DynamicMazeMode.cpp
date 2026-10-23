@@ -1,10 +1,11 @@
 #include "DynamicMazeMode.h"
 #include "../events/events/PlayerMovedEvent.h"
+#include <raylib.h>
 // state = 1
 
 void DynamicMazeMode::init(){
     int mazeSize = calcMazeSize(currentLevel);
-    maze = std::make_unique<Maze>(mazeSize,mazeSize);
+    maze = std::make_unique<Maze>(mazeSize,std::ceil(1.2*mazeSize));
     generator.generate(*maze);
     postProcessor.process(*maze);
 
@@ -18,8 +19,7 @@ void DynamicMazeMode::init(){
     scorer.resetScore();
     player = std::make_unique<Player>(Position(0,0), Direction(DirectionType::RIGHT));
     exitPos.setX(mazeSize-1);
-    exitPos.setY(mazeSize-1);
-    
+    exitPos.setY(std::ceil(1.2*mazeSize)-1);
     player->setMaze(maze.get());
     optimalPath = checker.getPath(*maze, Position(0,0),exitPos);
 
@@ -28,6 +28,7 @@ void DynamicMazeMode::init(){
     eventManager.subscribe<WallStateChangedEvent>(*player);
     eventManager.subscribe<PlayerMovedEvent>(*this);
     eventManager.printStats();
+    mutator.clearPending();
 }
 
 void DynamicMazeMode::cleanup(){
@@ -38,6 +39,7 @@ void DynamicMazeMode::cleanup(){
 
     eventManager.unsubscribe<PlayerMovedEvent>(*this);
     eventManager.printStats();
+    mutator.clearPending();
 }
 
 void DynamicMazeMode::update(float deltaTime){
@@ -46,6 +48,7 @@ void DynamicMazeMode::update(float deltaTime){
     }
     player->updateVisual(deltaTime);
     elapsedTime+=deltaTime;
+    mutator.update(deltaTime, *maze, player->getPosition(), exitPos);
     
     if(player->getPosition() == exitPos && player->isVisualComplete()){
         levelCompleted=true;
@@ -66,6 +69,8 @@ void DynamicMazeMode::render(IRenderer& renderer){
 
     renderer.beginWorld();
     renderer.drawMaze(*maze);
+    renderer.drawExit(exitPos);
+    renderer.drawTelegraphs();
     renderer.drawPlayer(*player);
     renderer.endWorld();
 

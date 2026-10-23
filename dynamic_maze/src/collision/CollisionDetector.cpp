@@ -1,7 +1,4 @@
 #include "CollisionDetector.h"
-#include "../events/events/PlayerHitEvent.h"
-#include "../events/events/EnemyDefeatedEvent.h"
-#include <memory>
 
 const float COLLISION_THREHOLD=0.6f;
 

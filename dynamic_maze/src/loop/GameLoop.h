@@ -3,6 +3,8 @@
 #include "../player/InputHandler.h"
 #include "../ui/UIManager.h"
 #include <memory>
+#include <raylib.h>
+
 class GameLoop{
 private:
 
@@ -10,7 +12,6 @@ private:
    IRenderer& renderer;
    EventManager& eventManager;
    std::unique_ptr<InputHandler> inputHandler;
-   float targetFPS;
    bool isRunning;
    
    void processInput();
@@ -19,8 +20,8 @@ private:
    float calcDeltaTime();
 public:
 
-   GameLoop(IRenderer& renderer, EventManager& eventManager, UIManager& uiManager ,float targetFPS=60):
-      renderer(renderer), eventManager(eventManager), targetFPS(targetFPS), isRunning(true) {
+   GameLoop(IRenderer& renderer, EventManager& eventManager, UIManager& uiManager):
+      renderer(renderer), eventManager(eventManager), isRunning(true) {
          modeManager = std::make_unique<ModeManager>(uiManager);
          inputHandler = std::make_unique<InputHandler>(eventManager);
       }

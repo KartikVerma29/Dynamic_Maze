@@ -1,9 +1,11 @@
 #pragma once
+#include <memory>
+#include <vector>
 #include "../events/EventManager.h"
 #include "../player/Player.h"
 #include "../enemy/IEnemy.h"
-#include <memory>
-#include <vector>
+#include "../events/events/PlayerHitEvent.h"
+#include "../events/events/EnemyDefeatedEvent.h"
 
 class CollisionDetector
 {

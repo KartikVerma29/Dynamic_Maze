@@ -1,10 +1,6 @@
 #include "BFSSolvabilityChecker.h"
-#include <algorithm>
-#include <cstdlib>
-#include <queue>
-#include <unordered_map>
-#include <vector>
-#include "../Maze.h"
+#include "../../core/Profiling.h"
+
 /*
  1  procedure BFS(G, root) is
  2      let Q be a queue
@@ -22,35 +18,72 @@
 
 */
 
-bool BFSSolvabilityChecker::isSolvable(Maze& maze,const Position& start,const Position& exit){
-   return !getPath(maze, start, exit).empty();
+bool BFSSolvabilityChecker::isSolvable(Maze& maze, const Position& start, const Position& exit) {
+   PROFILE_SCOPE;
+   int rows = maze.getRows(), cols = maze.getCols();
+   Cell* startCell = maze.getCell(start.getX(), start.getY());
+   Cell* exitCell  = maze.getCell(exit.getX(), exit.getY());
+   if (!startCell || !exitCell) return false;
+   std::vector<uint8_t> visited(rows * cols, 0);
+   std::queue<Cell*> q;
+   q.push(startCell);
+   visited[startCell->getRow() * cols + startCell->getCol()] = 1;
+   while (!q.empty()) {
+      Cell* curr = q.front();
+      q.pop();
+      if (curr == exitCell) return true;
+      for (auto dir : ALL_DIRECTIONS) {
+         Wall* wall = curr->getWall(dir);
+         if (wall && wall->getIsOpen()) {
+            Position offset = Direction(dir).toVector();
+            int nr = curr->getRow() + offset.getX();
+            int nc = curr->getCol() + offset.getY();
+            Cell* neighbour = maze.getCell(nr, nc);
+            if (neighbour && !visited[nr * cols + nc]) {
+               visited[nr * cols + nc] = 1;
+               q.push(neighbour);
+            }
+         }
+      }
+   }
+   return false;
 }
 
 std::vector<Position> BFSSolvabilityChecker::getPath(Maze& maze,const Position& start,const Position& exit){
-   std::queue<Cell*> q;
-   std::unordered_map<Cell*, Cell*> parent;
-
+   PROFILE_SCOPE;
+   int rows=maze.getRows(), cols=maze.getCols();
    Cell* startCell = maze.getCell(start.getX(), start.getY());
    Cell* exitCell = maze.getCell(exit.getX(), exit.getY());
 
+   if(!startCell || !exitCell) return {};
+
+   std::vector<Cell*> parent(rows*cols,nullptr);
+   std::vector<uint8_t> visited(rows*cols,0);
+   std::queue<Cell*> q;
+
+   int startIdx = startCell->getRow()*cols+startCell->getCol();
    q.push(startCell);
-   parent[startCell] = NULL;
+   visited[startIdx]=1;
 
    while(!q.empty()){
       Cell* curr = q.front(); q.pop();
       
-      if(curr==exitCell) return reconstructPath(parent, startCell, exitCell);
+      if(curr==exitCell) return reconstructPath(parent, startCell, exitCell, cols);
 
       for(auto dir:ALL_DIRECTIONS){
          Wall* wall = curr->getWall(dir);
          if(wall && wall->getIsOpen()){
-            Direction d(dir);
-            Position offset = d.toVector();
-            Cell*neighbour = maze.getCell(curr->getRow()+offset.getX(), curr->getCol()+offset.getY());
-         
-            if(neighbour && parent.find(neighbour)==parent.end()){
-               parent[neighbour] = curr;
-               q.push(neighbour);
+            Position offset = Direction(dir).toVector();
+            int nr = curr->getRow()+offset.getX(), nc = curr->getCol()+offset.getY();
+            Cell*neighbour = maze.getCell(nr,nc );
+
+               if(neighbour){
+                  int nIdx = nr*cols+nc;
+                  if(!visited[nIdx]){
+                     visited[nIdx]=1;
+                     parent[nIdx] = curr;
+                     q.push(neighbour);
+                  }
             }
          }
       }
@@ -59,14 +92,15 @@ std::vector<Position> BFSSolvabilityChecker::getPath(Maze& maze,const Position& 
    return {};
 }
 
-
-std::vector<Position> BFSSolvabilityChecker::reconstructPath(std::unordered_map<Cell*, Cell*>& parent, Cell*, Cell* exit){
+std::vector<Position> BFSSolvabilityChecker::reconstructPath(const std::vector<Cell*>& parent, Cell* start, Cell* exit, int cols){
    std::vector<Position> path;
    Cell* curr = exit;
-   while(curr!=NULL){
+   while(curr!=nullptr && curr!=start){
       path.push_back(Position(curr->getRow(), curr->getCol()));
-      curr = parent[curr];
+      int idx = curr->getRow()*cols + curr->getCol();
+      curr = parent[idx];
    }
+   if(curr==start) path.push_back(Position(start->getRow(), start->getCol()));
    std::reverse(path.begin(), path.end());
    return path;
 }

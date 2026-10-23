@@ -1,5 +1,4 @@
 #pragma once
-#include "../events/EventManager.h"
 #include "../player/Lives.h"
 #include <string>
 
@@ -7,12 +6,11 @@
 
 class UIManager{
 private:
-   EventManager& eventManager;
    int selectedIndex=0;
    float volume = 50.0f;
    int difficulty = 0;
 public:
-   UIManager(EventManager& eventManager);
+   UIManager();
    
    void drawHUD(int score);
    void drawLives(const Lives& lives);

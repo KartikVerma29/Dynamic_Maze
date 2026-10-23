@@ -1,5 +1,5 @@
 #include "GameLoop.h"
-#include <raylib.h>
+#include "../core/Profiling.h"
 
 #if defined(PLATFORM_WEB)
    #include <emscripten/emscripten.h>
@@ -10,6 +10,7 @@ void GameLoop::processInput(){
 }
 
 void GameLoop::update(float deltaTime){
+   renderer.update(deltaTime);
    modeManager->update(deltaTime);
 }
 
@@ -29,7 +30,7 @@ void GameLoop::step(){
    if(current && current->isFinished()){
       modeManager->transitionTo(current->getNextState());
    }
-
+   PROFILE_FRAME;
 }
 
 #if defined (PLATFORM_WEB)

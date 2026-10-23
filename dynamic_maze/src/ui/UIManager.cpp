@@ -1,8 +1,7 @@
 #include "UIManager.h"
 #define RAYGUI_IMPLEMENTATION
 #include <raygui.h>
-UIManager::UIManager(EventManager& eventManager):
-   eventManager(eventManager) {}
+UIManager::UIManager(){}
 
 void UIManager::drawHUD(int score){
    std::string str = std::to_string(score);
@@ -77,10 +76,10 @@ void UIManager::drawSettings() {
 
     DrawText("SETTINGS", sw/2 - MeasureText("SETTINGS", 32)/2, sh/4, 32, WHITE);
 
-    DrawText("Volume", sw/2 - 120, sh/4 + 80, 20, WHITE);
+    DrawText("Volume", sw/2 - 140, sh/4 + 80, 20, WHITE);
     GuiSlider({(float)sw/2 - 60, (float)sh/4 + 80, 160, 30}, "0", "100", &volume, 0.0f, 100.0f);
 
-    DrawText("Difficulty", sw/2 - 120, sh/4 + 130, 20, WHITE);
+    DrawText("Difficulty", sw/2 - 160, sh/4 + 130, 20, WHITE);
     if (GuiButton({(float)sw/2 - 60, (float)sh/4 + 130, 70, 30}, "Easy"))   difficulty = 0;
     if (GuiButton({(float)sw/2 + 20, (float)sh/4 + 130, 70, 30}, "Hard"))   difficulty = 1;
 

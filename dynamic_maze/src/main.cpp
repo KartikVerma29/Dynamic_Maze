@@ -8,9 +8,10 @@ int main(){
 
    std::cout<<"2. Creating Renderer\n"<<std::flush;
    RaylibRenderer renderer(1280,720, "Dynamic Maze");
+   eventManager.subscribe<WallTelegraphEvent>(renderer);
 
    std::cout<<"3. Creating UIManager\n"<<std::flush;
-   UIManager uiManager(eventManager);
+   UIManager uiManager;
 
    std::cout<<"4. Creating generator\n"<<std::flush;
    RecursiveBacktrackerGenerator generator;

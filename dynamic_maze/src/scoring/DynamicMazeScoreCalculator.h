@@ -1,20 +1,23 @@
 #pragma once
 #include "IScoreCalculator.h"
 
-class DynamicMazeScoreCalculator: public IScoreCalculator
-{
+class DynamicMazeScoreCalculator: public IScoreCalculator{
 private:
+   int score=0;
    int calcTimePenalty(const ScoreContext& ctx){
-      return (int)(ctx.timeTaken*10);
+      if(ctx.optimalPathLenght==0) return 0;
+      float secPerStep = ctx.timeTaken/(float)ctx.optimalPathLenght;
+      return (int)(secPerStep*300.0f);
    }
    int calcPathScore(const ScoreContext& ctx){
       if(ctx.pathLength==0) return 0;
-      return (float)ctx.optimalPathLenght/ctx.pathLength*100;
+      return (int)(((float)ctx.optimalPathLenght/ctx.optimalPathLenght)*1000.0f);
    }
-   int score=0;
 public:
    int calculate(const ScoreContext &ctx) override{
-      score = std::max(0,calcPathScore(ctx) - calcTimePenalty(ctx));
+      int pScore = calcPathScore(ctx);
+      int tPenalty = calcTimePenalty(ctx);
+      score = std::max(0, pScore-tPenalty);
       return score;
    }
    int getScore() const override{

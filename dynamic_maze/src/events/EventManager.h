@@ -44,7 +44,7 @@ public:
 
   void printStats(){
      for(auto& [t,s]:stats){
-        std::printf("%s sub=%ld unsub=%ld pub=%ld calls=%ld\n",
+        std::printf("\n%s sub=%ld unsub=%ld pub=%ld calls=%ld\n",
               t.name(), s.subcribes, s.unsubcribes, s.publishes, s.listenerCalls);
      }
   }

@@ -1,6 +1,4 @@
 #include "Cell.h"
-#include "Direction.h"
-#include "Wall.h"
 
 Cell::Cell(int row, int col): row(row), col(col), visited(false) {}
 

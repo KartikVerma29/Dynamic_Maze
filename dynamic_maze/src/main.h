@@ -20,3 +20,4 @@
 #include "enemy/pathfinding/heuristic/ManhattanHeuristic.h"
 #include "events/EventManager.h"
 #include "maze/postprocess/MazeBraider.h"
+#include "events/events/WallTelegraphEvent.h"

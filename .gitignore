@@ -40,3 +40,4 @@ dynamic_maze/bug.txt
 dynamic_maze/Builds
 dynamic_maze/src/lib
 dynamic_maze/src/include/raymath.h
+.gitmodules

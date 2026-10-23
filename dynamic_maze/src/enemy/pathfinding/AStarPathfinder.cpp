@@ -1,9 +1,5 @@
 #include "AStarPathfinder.h"
-#include <algorithm>
-#include <functional>
-#include <queue>
-#include <unordered_map>
-
+#include "../../core/Profiling.h"
 
 struct ANode{
    Cell* cell; 
@@ -17,6 +13,7 @@ struct ANode{
 };
 
 std::vector<Position> AStarPathfinder::findPath(Maze& maze, Position& from,const Position& to){
+   PROFILE_SCOPE;
    std::vector<Position> path;
    std::priority_queue<ANode, std::vector<ANode>, std::greater<ANode>> openSet;
    std::unordered_map<Cell*, Cell*> parent;

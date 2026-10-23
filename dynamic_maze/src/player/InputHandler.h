@@ -2,6 +2,9 @@
 #include "../core/Direction.h"
 #include "../events/EventManager.h"
 #include <optional>
+#include "../events/events/PlayerMovedEvent.h"
+#include <raylib.h>
+
 class InputHandler{
 private:
    EventManager& eventManager;

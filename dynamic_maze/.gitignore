@@ -1,3 +1,8 @@
 .codegraphy/*
 all_code.txt
 Builds
+log.log
+*.zst
+heaptrack/
+tracy/
+external/

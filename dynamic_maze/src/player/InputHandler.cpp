@@ -1,8 +1,4 @@
 #include "InputHandler.h"
-#include "../events/events/PlayerMovedEvent.h"
-#include <optional>
-#include <raylib.h>
-
 
 void InputHandler::update(){
    auto dir = readKeyboard();

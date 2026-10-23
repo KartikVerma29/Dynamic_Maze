@@ -20,5 +20,9 @@ public:
    virtual void updateFog(Position& position, float radius)=0;
    virtual void drawFog() = 0;
    virtual void setMazeDimensions(int rows, int cols) = 0;
+   virtual void update(float deltaTime)=0;
+   virtual void drawTelegraphs()=0;
+   virtual void clearTelegraphs()=0;
+   virtual void drawExit(const Position& exitPos)=0;
    virtual ~IRenderer()=default;
 };
