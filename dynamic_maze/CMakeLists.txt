@@ -63,13 +63,31 @@ endif()
 # PLATFORM-SPECIFIC LINKING
 # ─────────────────────────────────────────
 if(WIN32)
-    # Windows (MinGW) Linking: Point directly to the custom compiled .a file
+    # Windows (MinGW) Linking
     target_link_libraries(dynamic_maze PRIVATE 
         ${CMAKE_SOURCE_DIR}/src/lib/win/libraylib.a 
         winmm gdi32 opengl32
     )
+elseif(EMSCRIPTEN)
+    target_link_libraries(dynamic_maze PRIVATE 
+        ${CMAKE_SOURCE_DIR}/src/lib/libraylib.web.a
+    )
+    
+    target_compile_definitions(dynamic_maze PRIVATE PLATFORM_WEB)
+    
+    set_target_properties(dynamic_maze PROPERTIES 
+        OUTPUT_NAME "index"
+        SUFFIX ".html"
+        RUNTIME_OUTPUT_DIRECTORY "/home/zerotwo/Desktop/Code/Project/Project-2"
+    )
+
+    target_link_options(dynamic_maze PRIVATE
+        "SHELL:-s USE_GLFW=3"
+        "SHELL:-s WASM=1"
+        "SHELL:-s ALLOW_MEMORY_GROWTH=1"
+        "SHELL:--shell-file ${CMAKE_SOURCE_DIR}/../shell.html"
+    )
 else()
-    # Linux Native Linking: Use the system package manager
     find_package(raylib REQUIRED)
     
     if(TARGET raylib::raylib)

@@ -11,12 +11,12 @@ void DarkMazeMode::init(){
 
    maze->getCell(0, 0)->setExplored(true);
 
-   lightRadius = std::max(3.5f, 7.0f * (mazeSize / 50.0f));
+   lightRadius = 1.5f + (mazeSize / 50.0f) * 2.0f;
    player = std::make_unique<Player>(Position(0,0), Direction(DirectionType::RIGHT));
    player->setMaze(maze.get());
    exitPos.setX(mazeSize-1);
    exitPos.setY(mazeSize-1);
-
+   std::printf("Light Radius: %f", lightRadius);
    finished=false;
    elapsedTime=0.0f;
    scorer.resetScore();
