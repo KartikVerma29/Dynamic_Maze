@@ -21,6 +21,8 @@ private:
    static constexpr float CLOSE_PROBABILITY = 0.95f;
    static constexpr float OPEN_PROBABILITY = 0.85f;
 
+   std::mt19937 gen{std::random_device{}()};
+
    ISolvabilityChecker& checker;
    EventManager& eventManager;
    int batchSize;

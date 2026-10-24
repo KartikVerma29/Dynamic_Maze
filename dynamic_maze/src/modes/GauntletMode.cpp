@@ -1,21 +1,4 @@
 #include "GauntletMode.h"
-#include "../enemy/Chaser.h"
-#include "../enemy/Blocker.h"
-#include "../enemy/Patrol.h"
-#include "../collision/CollisionDetector.h"
-#include "../core/Position.h"
-#include "../enemy/IEnemy.h"
-#include "../events/events/EnemyDefeatedEvent.h"
-#include "../events/events/PlayerHitEvent.h"
-#include "../events/events/PlayerMovedEvent.h"
-#include "../events/events/WallAddedEvent.h"
-#include "../events/events/WallRemovedEvent.h"
-#include "../events/events/WallStateChangedEvent.h"
-#include "../renderer/IRenderer.h"
-#include "../scoring/IScoreCalculator.h"
-#include <cstdlib>
-#include <memory>
- 
 
 void GauntletMode::spawnEnemy(int slotIndex){
 
@@ -150,11 +133,13 @@ void GauntletMode::update(float deltaTime){
    }
 
    if(lives.isGameOver()){
+      eventManager.unsubscribe<PlayerMovedEvent>(*player);
       ScoreContext ctx;
       ctx.timeTaken = elapsedTime;
       gauntletScorer.calculate(ctx);
    }
    if(survivalTime<=elapsedTime){
+      eventManager.unsubscribe<PlayerMovedEvent>(*player);
       levelCompleted=true;
       currentLevel++;
       ScoreContext ctx;

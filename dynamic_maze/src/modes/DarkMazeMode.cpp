@@ -11,7 +11,7 @@ void DarkMazeMode::init(){
 
    maze->getCell(0, 0)->setExplored(true);
 
-   lightRadius = 7.0 * (mazeSize/50.0);
+   lightRadius = std::max(3.5f, 7.0f * (mazeSize / 50.0f));
    player = std::make_unique<Player>(Position(0,0), Direction(DirectionType::RIGHT));
    player->setMaze(maze.get());
    exitPos.setX(mazeSize-1);
@@ -80,6 +80,7 @@ void DarkMazeMode::update(float deltaTime){
    if(player->getPosition()==exitPos && player->isVisualComplete()){
       levelCompleted=true;
       currentLevel++;
+      eventManager.unsubscribe<PlayerMovedEvent>(*player);
       float visited=0;
       for(int i=0; i<maze->getRows(); i++){
          for(int j=0; j<maze->getCols(); j++){
@@ -99,6 +100,7 @@ void DarkMazeMode::update(float deltaTime){
 }
 
 void DarkMazeMode::onEvent(const PlayerMovedEvent&){
+   if(levelCompleted) return;
    stepCounter++;
    totalsteps++;
    if(isDynamic){

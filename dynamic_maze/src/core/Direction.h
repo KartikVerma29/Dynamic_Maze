@@ -31,7 +31,7 @@ public:
       return vec[static_cast<size_t>(type)];
    }
    Direction rotate90() const{
-      return Direction(static_cast<DirectionType>((static_cast<int>(type)+3)&3));
+      return Direction(static_cast<DirectionType>((static_cast<int>(type)+1)&3));
    }
 
    Direction rotateTo(int angle) const {

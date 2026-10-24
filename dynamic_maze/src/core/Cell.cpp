@@ -2,20 +2,17 @@
 
 Cell::Cell(int row, int col): row(row), col(col), visited(false) {}
 
-Wall* Cell::getWall(const DirectionType& type){
-   auto it=walls.find(type);
-   if(it==walls.end()) return nullptr;
-   return it->second;
+Wall* Cell::getWall(DirectionType type) const{
+   return walls[static_cast<size_t>(type)];
 }
 
-void Cell::setWall(const DirectionType& type, Wall* wall){
-   walls[type] = wall;
+void Cell::setWall(DirectionType type, Wall* wall){
+   walls[static_cast<size_t>(type)]=wall;
 }
 
-bool Cell::hasOpenWall(DirectionType& type){
-   auto it=walls.find(type);
-   if(it==walls.end()) return false;
-   return it->second->getIsOpen();
+bool Cell::hasOpenWall(DirectionType type) const{
+   Wall* w = walls[static_cast<size_t>(type)];
+   return w && w->getIsOpen();
 }
 
 int Cell::getRow() const{ return this->row;}

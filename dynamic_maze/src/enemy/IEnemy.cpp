@@ -56,10 +56,10 @@ bool IEnemy::tryStepNext(Maze &maze){
    int dy = (int)nextStep.getY()-(int)position.getY();
 
    DirectionType dir;
-   if(dx==-1 && dy==0) dir=ALL_DIRECTIONS[0];
-   else if(dx==1 && dy==0) dir=ALL_DIRECTIONS[2];
-   else if(dx==0 && dy==1) dir=ALL_DIRECTIONS[1];
-   else if(dx==0 && dy==-1) dir=ALL_DIRECTIONS[3];
+   if (dx == -1 && dy == 0) dir = DirectionType::UP;
+   else if (dx == 1 && dy == 0) dir = DirectionType::DOWN;
+   else if (dx == 0 && dy == 1) dir = DirectionType::RIGHT;
+   else if (dx == 0 && dy == -1) dir = DirectionType::LEFT;
    else{
       cachedPath.clear();
       pathIndex=0;

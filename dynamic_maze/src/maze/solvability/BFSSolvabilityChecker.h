@@ -1,9 +1,7 @@
 #pragma once
 #include "ISolvabilityChecker.h"
-#include <unordered_map>
 #include <algorithm>
 #include <cstdint>
-#include <cstdlib>
 #include <queue>
 #include <vector>
 #include "../Maze.h"

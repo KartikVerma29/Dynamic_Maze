@@ -4,14 +4,14 @@
 #include "../player/Lives.h"
 #include "../collision/CollisionDetector.h"
 #include "../enemy/pathfinding/IPathfinder.h"
-#include "../enemy/pathfinding/AStarPathfinder.h"
 #include "../enemy/pathfinding/heuristic/IHeuristic.h"
-#include "../enemy/pathfinding/heuristic/ManhattanHeuristic.h"
 #include "../events/events/EnemyDefeatedEvent.h"
 #include "../scoring/GauntletScoreCalculator.h"
 #include "../events/IEventListener.h"
 #include "../events/events/PlayerHitEvent.h"
-
+#include "../enemy/Blocker.h"
+#include "../enemy/Chaser.h"
+#include "../enemy/Patrol.h"
 
 class GauntletMode:public IGameMode, public IEventListener<PlayerHitEvent>
 {

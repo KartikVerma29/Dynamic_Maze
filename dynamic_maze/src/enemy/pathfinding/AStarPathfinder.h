@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <functional>
 #include <queue>
-#include <unordered_map>
 
 class AStarPathfinder: public IPathfinder
 {

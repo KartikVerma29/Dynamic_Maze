@@ -38,20 +38,19 @@ Wall* RecursiveBacktrackerGenerator::getWallbetween(Cell* cell, int row, int col
     else if (nRow > row) dir =  DirectionType::DOWN;
     else if (nCol < col) dir = DirectionType::LEFT;
     else dir = DirectionType::RIGHT;
-    return cell->getWall((const DirectionType) dir);
+    return cell->getWall(dir);
 }
 
 void RecursiveBacktrackerGenerator::generate(Maze& maze){
    int rows = maze.getRows(), cols = maze.getCols();
 
-   std::random_device rd;
-   std::mt19937 gen(rd());
-   std::uniform_int_distribution<> rowDist(0, rows-1);
-   std::uniform_int_distribution<> colDist(0, cols-1);
+
+   std::uniform_int_distribution<int> rowDist(0, rows-1);
+   std::uniform_int_distribution<int> colDist(0, cols-1);
 
     
-   int sRow = rowDist(gen);
-   int sCol = colDist(gen);
+   int sRow = rowDist(rng);
+   int sCol = colDist(rng);
    
    Cell* cell = maze.getCell(sRow, sCol);
     if (!cell){
@@ -64,23 +63,22 @@ void RecursiveBacktrackerGenerator::generate(Maze& maze){
    std::stack<std::pair<int,int>> st;
    st.push({sRow, sCol});
 
-   while(st.size()){
+   while(!st.empty()){
       auto [row,col] = st.top();
-
-      std::vector<std::pair<int,int>> neighbours = getUnvisit(maze,row,col);
+      auto neighbours = getUnvisit(maze,row,col);
 
       if(!neighbours.empty()){
-         int idx = std::rand()%neighbours.size();
-         auto [r,c] = neighbours[idx];
+        std::uniform_int_distribution<size_t> pick(0, neighbours.size()-1);
+        auto [r,c] = neighbours[pick(rng)];
 
-         Cell* curr = maze.getCell(row, col);
-         Wall* wall = getWallbetween(curr, row, col, r, c);
-         if(wall) wall->open();
+        Cell* curr = maze.getCell(row, col);
+        Wall* wall = getWallbetween(curr, row, col, r, c);
+        if(wall) wall->open();
 
-         maze.getCell(r,c)->setVisited(true);
-         st.push({r,c});
+        maze.getCell(r,c)->setVisited(true);
+        st.push({r,c});
       }else{
-         st.pop();
+        st.pop();
       }
 
    }

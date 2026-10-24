@@ -53,6 +53,7 @@ void DynamicMazeMode::update(float deltaTime){
     if(player->getPosition() == exitPos && player->isVisualComplete()){
         levelCompleted=true;
         currentLevel++;
+        eventManager.unsubscribe<PlayerMovedEvent>(*player);
         ScoreContext ctx;
         ctx.timeTaken = elapsedTime;
         ctx.pathLength = totalsteps;
@@ -76,6 +77,7 @@ void DynamicMazeMode::render(IRenderer& renderer){
 
     uiManager.drawHUD(scorer.getScore());
     if(levelCompleted){
+        renderer.clearTelegraphs();
         uiManager.drawLevelComplete(scorer.getScore());
     } 
 
@@ -87,6 +89,7 @@ void DynamicMazeMode::onEnter(){ init(); }
 void DynamicMazeMode::onExit(){ cleanup(); }
 
 void DynamicMazeMode::onEvent(const PlayerMovedEvent&){
+    if(levelCompleted) return;
     stepCounter++;
     totalsteps++;
     if(stepCounter>=stepThreshold){

@@ -3,15 +3,12 @@
 
 std::vector<std::pair<Wall*,float>> GridMazeMutator::selectWalls(Maze& maze, const Position& playerPos, const Position& exitPos){
    std::vector<std::pair<Wall*,float>> result;
-   
-   std::random_device rd;
-   std::mt19937 gen(rd());
    std::uniform_real_distribution<float> dis(0.0f, 1.0f);
 
    for(const auto& w:maze.getWalls()){
       Wall* wall = w.get();
       float chanceTo = wall->getIsOpen()?CLOSE_PROBABILITY:OPEN_PROBABILITY;
-      if(dis(gen)>chanceTo) continue;      
+      if(dis(this->gen)>chanceTo) continue;      
       auto[r1,c1] = wall->getCells().first;
       auto[r2,c2] = wall->getCells().second;
       Position p1(r1,c1), p2(r2,c2);

@@ -1,6 +1,4 @@
 #include "PrimsGenerator.h"
-#include <cstdlib>
-#include <random>
 
 /*
 1. Start with a grid full of walls.
@@ -15,7 +13,7 @@
 
 void PrimsGenerator::addFWalls(Maze& maze, int row, int col, std::vector<Wall*>& fWalls){
    Cell* cell = maze.getCell(row,col);
-   for(const auto dir: ALL_DIRECTIONS){
+   for(auto dir: ALL_DIRECTIONS){
       Wall* wall = cell->getWall(dir);
       if(wall && !wall->getIsOpen()){
          fWalls.push_back(wall);
@@ -27,20 +25,19 @@ void PrimsGenerator::addFWalls(Maze& maze, int row, int col, std::vector<Wall*>&
 void PrimsGenerator::generate(Maze& maze){
    int rows = maze.getRows(), cols = maze.getCols();
 
-   std::random_device rd;
-   std::mt19937 gen(rd());
-   std::uniform_int_distribution<> rowDis(0,rows-1);
-   std::uniform_int_distribution<> colDis(0,cols-1);
+   std::uniform_int_distribution<int> rowDis(0,rows-1);
+   std::uniform_int_distribution<int> colDis(0,cols-1);
 
-   int sRow = rowDis(gen);
-   int sCol = colDis(gen);
+   int sRow = rowDis(rng);
+   int sCol = colDis(rng);
 
    maze.getCell(sRow, sCol)->setVisited(true);
 
    std::vector<Wall*> fWalls;
    addFWalls(maze, sRow, sCol,fWalls);
    while(! fWalls.empty()){
-      int idx = std::rand()%fWalls.size();
+      std::uniform_int_distribution<size_t> pick(0, fWalls.size() - 1);
+      size_t idx = pick(rng);
       Wall* wall = fWalls[idx];
 
       auto [cellA, cellB] = wall->getCells();
@@ -55,7 +52,7 @@ void PrimsGenerator::generate(Maze& maze){
          addFWalls(maze, r, c, fWalls);
       }
    
-      fWalls.erase(fWalls.begin()+idx);
+      fWalls[idx]=fWalls.back();
+      fWalls.pop_back();
    }
-
 }
